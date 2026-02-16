@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stata Data Analysis Guide – Monu Prajapati</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--p:#0066cc;--pd:#004d99;--g:#00c896;--a:#ff6b35;--dk:#1a1a2e;--gr:#94a3b8;--gl:#e2e8f0;--bg:#f8fafc}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;line-height:1.6;color:var(--dk);background:var(--bg)}
+/* Header */
+.hdr{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;padding:3.5rem 2rem;text-align:center}
+.hdr h1{font-size:2.75rem;font-weight:700;margin-bottom:1rem;letter-spacing:-0.5px}
+.hdr .sub{font-size:1.25rem;opacity:.95;margin-bottom:0}
+.badge{display:inline-block;background:rgba(255,255,255,.2);padding:.75rem 1.5rem;border-radius:50px;font-weight:600;border:2px solid rgba(255,255,255,.3)}
+/* Nav */
+.nav-wrap{position:sticky;top:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:100;border-bottom:3px solid var(--p)}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;position:relative}
+.burger{display:none;background:none;border:none;cursor:pointer;padding:1rem 1.25rem;flex-direction:column;gap:5px;flex-shrink:0}
+.burger span{display:block;width:24px;height:2.5px;background:var(--dk);border-radius:2px;transition:all .3s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav{display:flex;flex:1;overflow-x:auto}
+.ni{flex:1;min-width:120px;padding:1.1rem .8rem;color:var(--dk);font-weight:600;text-align:center;border-bottom:3px solid transparent;transition:all .3s;white-space:nowrap;cursor:pointer;user-select:none;font-size:.86rem}
+.ni:hover,.ni.active{background:var(--p);color:#fff;border-bottom-color:var(--a)}
+.sbtn{background:var(--p);border:none;color:#fff;font-size:1.2rem;padding:0 1.2rem;cursor:pointer;min-height:52px;transition:background .2s;flex-shrink:0}
+.sbtn:hover{background:var(--pd)}
+/* Search overlay */
+.so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:flex-start;justify-content:center;padding-top:80px}
+.so.open{display:flex}
+.sb{background:#fff;border-radius:16px;width:90%;max-width:680px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+.siw{display:flex;align-items:center;padding:1rem 1.25rem;border-bottom:2px solid var(--gl);gap:.75rem}
+.siw span{font-size:1.3rem}
+.si{flex:1;border:none;outline:none;font-size:1.1rem;font-family:inherit;color:var(--dk)}
+.sc{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--gr)}
+.sr{max-height:420px;overflow-y:auto;padding:.5rem 0}
+.sri{padding:.9rem 1.25rem;cursor:pointer;border-bottom:1px solid var(--gl);transition:background .15s}
+.sri:hover{background:#f0f7ff}
+.sri:last-child{border-bottom:none}
+.rt{font-weight:700;color:var(--p);font-size:.95rem}
+.rs{font-size:.8rem;color:var(--gr);margin-top:2px}
+.rd{font-size:.875rem;color:var(--dk);margin-top:3px}
+.se{padding:2rem;text-align:center;color:var(--gr)}
+/* Container / sections */
+.ctr{max-width:1400px;margin:0 auto;padding:3rem 2rem}
+.section{display:none;animation:fi .4s ease}
+.section.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.section-title{font-size:2.5rem;font-weight:800;margin-bottom:.5rem}
+.section-desc{font-size:1.1rem;color:var(--gr);margin-bottom:2.5rem}
+/* Categories */
+.category{margin-bottom:3rem}
+.category-title{font-size:1.6rem;font-weight:700;margin-bottom:1.5rem;padding-bottom:.5rem;border-bottom:3px solid var(--p);display:inline-block}
+/* Cards */
+.command-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;margin-bottom:2rem}
+.command-card{background:#fff;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .3s;border:2px solid transparent}
+.command-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,102,204,.15);border-color:var(--p)}
+.command-card h4{font-size:1.05rem;font-weight:700;color:var(--p);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+.command-card h4::before{content:'▸';color:var(--g)}
+.command-card p{color:var(--dk);margin-bottom:.9rem;font-size:.93rem}
+/* Code */
+.code{background:#1e1e1e;color:#d4d4d4;padding:1rem;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:.85rem;overflow-x:auto;border-left:4px solid var(--g);line-height:1.7;white-space:pre}
+code,pre{font-family:Consolas,'Courier New',monospace;white-space:pre}
+.cc{color:#6a9955}.ck{color:#569cd6;font-weight:600}.cs{color:#ce9178}.cf{color:#dcdcaa}
+/* Info boxes */
+.info-box{background:linear-gradient(135deg,#e0f2fe,#dbeafe);padding:1.25rem;border-radius:12px;border-left:4px solid var(--p);margin:1.5rem 0}
+.warning-box{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:1.25rem;border-radius:12px;border-left:4px solid #f59e0b;margin:1.5rem 0}
+.success-box{background:linear-gradient(135deg,#d1fae5,#a7f3d0);padding:1.25rem;border-radius:12px;border-left:4px solid var(--g);margin:1.5rem 0}
+/* Tables */
+.table-container{overflow-x:auto;margin:1.5rem 0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+table{width:100%;border-collapse:collapse;background:#fff}
+th{background:var(--p);color:#fff;padding:1rem;text-align:left;font-weight:600}
+td{padding:.9rem 1rem;border-bottom:1px solid var(--gl)}
+tr:last-child td{border-bottom:none}
+tr:hover{background:var(--bg)}
+/* Footer */
+.footer{background:var(--dk);color:#fff;padding:3rem 2rem;margin-top:4rem;text-align:center}
+.fc{max-width:800px;margin:0 auto}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:2rem 0}
+.cc2{background:rgba(255,255,255,.1);padding:1.5rem;border-radius:12px;border:2px solid rgba(255,255,255,.2);transition:all .3s}
+.cc2:hover{background:rgba(255,255,255,.15);transform:translateY(-4px)}
+.cc2 .ico{font-size:2rem;margin-bottom:.5rem}
+.cc2 .lbl{font-size:.875rem;opacity:.8;margin-bottom:.25rem}
+.cc2 .val{font-size:1.1rem;font-weight:600}
+/* Scroll top */
+.stb{position:fixed;bottom:2rem;right:2rem;width:50px;height:50px;background:var(--p);color:#fff;border:none;border-radius:50%;font-size:1.5rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,102,204,.4);transition:all .3s;z-index:1000}
+.stb.vis{display:flex}
+.stb:hover{background:var(--pd);transform:translateY(-4px)}
+/* Mobile */
+@media(max-width:768px){
+  .hdr h1{font-size:1.75rem}.hdr{padding:2rem 1rem}
+  .burger{display:flex}
+  .nav{display:none;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.15);border-top:2px solid var(--p);z-index:999}
+  .nav.open{display:flex}
+  .ni{min-width:auto;text-align:left;padding:1rem 1.5rem;border-bottom:1px solid var(--gl);border-left:4px solid transparent;font-size:1rem}
+  .ni:hover,.ni.active{background:var(--p);color:#fff;border-left-color:var(--a)}
+  .command-grid{grid-template-columns:1fr}
+  .section-title{font-size:1.75rem}.category-title{font-size:1.3rem}
+  .ctr{padding:1.5rem 1rem}.cg{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>Stata Statistical Analysis Guide</h1>
+  <p style="font-size:1.5rem;font-weight:700;margin:1rem 0">Monu Prajapati</p>
+  <p class="sub">Statistician | Biostatistician</p>
+  <p style="font-size:1rem;margin-top:1.5rem;opacity:0.95;line-height:1.6">This guide provides commonly used Stata statistical commands in one place to support students, researchers, and academic learning.</p>
+</div>
+
+<div class="nav-wrap">
+  <div class="nav-inner">
+    <button class="burger" id="burger"><span></span><span></span><span></span></button>
+    <nav class="nav" id="mainNav">
+      <div class="ni active" data-s="basics">🚀 Basics</div>
+      <div class="ni" data-s="datamanagement">🗄️ Data Management</div>
+      <div class="ni" data-s="tests">🧪 Statistical Tests</div>
+      <div class="ni" data-s="regression">📈 Regression &amp; Modeling</div>
+      <div class="ni" data-s="visualization">📊 Visualization</div>
+      <div class="ni" data-s="reference">📖 Reference</div>
+    </nav>
+    <button class="sbtn" id="sBtn" title="Search (Ctrl+K)">🔍</button>
+  </div>
+</div>
+
+<div class="so" id="sOverlay">
+  <div class="sb">
+    <div class="siw"><span>🔍</span><input class="si" id="sInput" type="text" placeholder="Search commands… (Ctrl+K)" autocomplete="off"/><button class="sc" id="sClose">✕</button></div>
+    <div class="sr" id="sResults"><div class="se">Start typing to search…</div></div>
+  </div>
+</div>
+
+<div class="ctr">
+<section id="basics" class="section active"><h2 class="section-title">🚀 Getting Started with Stata</h2><p class="section-desc">Fundamentals of Stata syntax, data types, and the interface</p>
+<div class="warning-box"><strong>⚠️ Important:</strong> Replace example variable names (mpg, price, foreign, etc.) with variables from your own dataset.</div>
+<div class="success-box"><strong>✨ Professional Reproducibility Header:</strong> Start every do-file with:<br><br><code>version 18<br>clear<br>set more off<br><br>capture log close<br>log using "analysis.log", text replace<br><br>* Your analysis commands here<br><br>log close</code></div>
+<div class="info-box"><strong>Stata command syntax:</strong> [<span class="ck">by</span> varlist:] command [varlist] [=exp] [<span class="ck">if</span>] [<span class="ck">in</span>] [weight] [, options]</div>
+<div class="category"><h3 class="category-title">Command Syntax</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Load System Data</h4><p>Built-in practice datasets</p><div class="code"><span class="ck">sysuse</span> auto, clear</div></div>
+<div class="command-card"><h4>Load Data</h4><p>Open a .dta file</p><div class="code"><span class="ck">use</span> <span class="cs">"yourfile.dta"</span>, clear
+<span class="ck">describe</span>
+<span class="ck">summarize</span></div></div>
+<div class="command-card"><h4>Import CSV</h4><p>Import comma-separated file</p><div class="code"><span class="ck">import delimited</span> <span class="cs">"data.csv"</span>, ///
+    clear encoding(UTF-8)</div></div>
+<div class="command-card"><h4>Import Excel</h4><p>Import Excel spreadsheet</p><div class="code"><span class="ck">import excel</span> <span class="cs">"data.xlsx"</span>, ///
+    sheet(<span class="cs">"Sheet1"</span>) firstrow clear</div></div>
+<div class="command-card"><h4>Working Directory</h4><p>Set and check folder</p><div class="code"><span class="ck">cd</span> <span class="cs">"C:/MyProject"</span>
+<span class="ck">pwd</span></div></div>
+<div class="command-card"><h4>Log File</h4><p>Record session output</p><div class="code"><span class="ck">capture log close</span>
+<span class="ck">log using</span> <span class="cs">"analysis.log"</span>, text replace
+
+<span class="cc">* Your analysis commands here</span>
+
+<span class="ck">log close</span></div></div>
+<div class="command-card"><h4>Clear Memory</h4><p>Remove data from memory</p><div class="code"><span class="ck">clear</span>
+
+<span class="cc">* Use 'clear all' only if you need to</span>
+<span class="cc">* remove Mata objects and programs</span></div></div>
+<div class="command-card"><h4>Help</h4><p>Get help on any command</p><div class="code"><span class="ck">help</span> regress
+<span class="ck">search</span> regression</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Data Types</h3>
+<div class="table-container"><table>
+<tr><th>Type</th><th>Description</th><th>Storage</th><th>Use Case</th></tr>
+<tr><td><code>byte</code></td><td>Integers -127 to 100*</td><td>1 byte</td><td>Binary/flags</td></tr>
+<tr><td><code>int</code></td><td>Integers -32,767 to 32,740*</td><td>2 bytes</td><td>Small integers</td></tr>
+<tr><td><code>long</code></td><td>Integers -2,147,483,647 to 2,147,483,620*</td><td>4 bytes</td><td>Large integers</td></tr>
+<tr><td><code>float</code></td><td>~7 significant digits</td><td>4 bytes</td><td>Decimals</td></tr>
+<tr><td><code>double</code></td><td>~16 significant digits</td><td>8 bytes</td><td>High-precision</td></tr>
+<tr><td><code>string (str#)</code></td><td>Text — str1 to str2045</td><td>1-2045 chars</td><td>Names, categories</td></tr>
+</table></div>
+<div class="warning-box"><strong>* Note:</strong> Upper limits reduced because Stata reserves highest values for missing codes (., .a–.z).</div>
+</div>
+<div class="category"><h3 class="category-title">Keyboard Shortcuts</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Ctrl + 8</h4><p>Open Data Editor</p></div>
+<div class="command-card"><h4>Ctrl + 9</h4><p>Open Do-file Editor</p></div>
+<div class="command-card"><h4>Ctrl + D</h4><p>Run selected do-file code</p></div>
+<div class="command-card"><h4>F2</h4><p>Quick describe data</p></div>
+<div class="command-card"><h4>PgUp / PgDn</h4><p>Scroll through previous commands</p></div>
+<div class="command-card"><h4>Tab</h4><p>Autocomplete variable names</p></div>
+</div>
+</div>
+</section>
+<section id="datamanagement" class="section"><h2 class="section-title">🗄️ Data Management</h2><p class="section-desc">Explore, clean, transform, merge, reshape, and automate your data workflows</p>
+<div class="category"><h3 class="category-title">Explore Data</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Describe</h4><p>Variable names, types and labels</p><div class="code"><span class="ck">describe</span>
+<span class="ck">describe</span> make price mpg</div></div>
+<div class="command-card"><h4>Summarize</h4><p>Descriptive statistics</p><div class="code"><span class="ck">summarize</span> price mpg
+<span class="ck">summarize</span> price, detail</div></div>
+<div class="command-card"><h4>List</h4><p>Display data values</p><div class="code"><span class="ck">list in</span> 1/10
+<span class="ck">list</span> make price <span class="ck">if</span> price &gt; 10000</div></div>
+<div class="command-card"><h4>Browse / Edit</h4><p>Spreadsheet view</p><div class="code"><span class="ck">browse</span>
+<span class="ck">edit</span>
+<span class="cc">// Not recommended in professional</span>
+<span class="cc">// or reproducible analysis</span></div></div>
+<div class="command-card"><h4>Codebook</h4><p>Full variable information</p><div class="code"><span class="ck">codebook</span> price</div></div>
+<div class="command-card"><h4>Count &amp; Duplicates</h4><p>Count rows, find duplicates</p><div class="code"><span class="ck">count if</span> price &gt; 5000
+<span class="ck">duplicates report</span>
+<span class="ck">duplicates list</span> make</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Create &amp; Modify Variables</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Generate</h4><p>Create new variable</p><div class="code"><span class="ck">gen</span> log_price = log(price)
+<span class="ck">gen</span> price_sq = price^2</div></div>
+<div class="command-card"><h4>Binary Variable</h4><p>Create 0/1 indicator</p><div class="code"><span class="ck">gen byte</span> expensive = (price &gt; 10000)
+<span class="ck">gen byte</span> domestic = (foreign == 0)</div></div>
+<div class="command-card"><h4>Replace</h4><p>Modify existing values</p><div class="code"><span class="ck">replace</span> price = price * 1.1
+<span class="ck">replace</span> price = 5000 <span class="ck">if</span> price &lt; 5000</div></div>
+<div class="command-card"><h4>Group Stats (egen)</h4><p>Statistics by group</p><div class="code"><span class="ck">egen</span> mean_p = mean(price), by(foreign)
+<span class="ck">egen</span> max_mpg = max(mpg)</div></div>
+<div class="command-card"><h4>Rename &amp; Label</h4><p>Rename and add labels</p><div class="code"><span class="ck">rename</span> price sale_price
+<span class="ck">label var</span> mpg <span class="cs">"Miles per Gallon"</span></div></div>
+<div class="command-card"><h4>Row Index</h4><p>Observation numbers</p><div class="code"><span class="ck">gen</span> id = _n
+<span class="ck">gen</span> total = _N
+<span class="ck">bysort</span> foreign: <span class="ck">gen</span> n = _N</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Filter &amp; Sort</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Keep / Drop Observations</h4><p>Filter rows</p><div class="code"><span class="ck">keep if</span> price &gt; 5000
+<span class="ck">drop if</span> mpg &lt; 20</div></div>
+<div class="command-card"><h4>Keep / Drop Variables</h4><p>Select columns</p><div class="code"><span class="ck">keep</span> make price mpg weight
+<span class="ck">drop</span> rep78 headroom</div></div>
+<div class="command-card"><h4>Sort</h4><p>Order observations</p><div class="code"><span class="ck">sort</span> price
+<span class="ck">gsort</span> -price</div></div>
+<div class="command-card"><h4>Sample</h4><p>Random subsample</p><div class="code"><span class="ck">set seed</span> 12345
+<span class="ck">sample</span> 25  <span class="cc">// 25% sample</span>
+<span class="ck">sample</span> 25, count  <span class="cc">// exactly 25 obs</span></div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Merge &amp; Reshape</h3>
+<div class="command-grid">
+<div class="command-card"><h4>One-to-One Merge</h4><p>Merge by unique ID</p><div class="code"><span class="ck">merge</span> 1:1 id <span class="ck">using</span> <span class="cs">"file2.dta"</span>
+<span class="ck">tabulate</span> _merge</div></div>
+<div class="command-card"><h4>Many-to-One Merge</h4><p>Merge with group-level data</p><div class="code"><span class="ck">merge</span> m:1 country <span class="ck">using</span> <span class="cs">"countries.dta"</span>
+<span class="ck">tabulate</span> _merge</div></div>
+<div class="command-card"><h4>Append</h4><p>Stack datasets vertically</p><div class="code"><span class="ck">append using</span> <span class="cs">"moredata.dta"</span></div></div>
+<div class="command-card"><h4>Reshape Long</h4><p>Wide to long format</p><div class="code"><span class="ck">reshape long</span> sales, i(country) j(year)</div></div>
+<div class="command-card"><h4>Reshape Wide</h4><p>Long to wide format</p><div class="code"><span class="ck">reshape wide</span> sales, i(country) j(year)</div></div>
+<div class="command-card"><h4>Collapse</h4><p>Aggregate to group level</p><div class="code"><span class="cc">// Professional safe version:</span>
+<span class="ck">preserve</span>
+<span class="ck">collapse</span> (mean) price (max) mpg, by(foreign)
+<span class="cc">// ... your analysis ...</span>
+<span class="ck">restore</span></div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Loops &amp; Automation</h3>
+<div class="command-grid">
+<div class="command-card"><h4>foreach — Variables</h4><p>Loop over variable list</p><div class="code"><span class="ck">foreach</span> var <span class="ck">of varlist</span> mpg price weight {
+    <span class="ck">summarize</span> `var'
+}</div></div>
+<div class="command-card"><h4>foreach — Values</h4><p>Loop over text list</p><div class="code"><span class="ck">foreach</span> x <span class="ck">in</span> <span class="cs">"USA"</span> <span class="cs">"UK"</span> {
+    <span class="ck">display</span> "`x'"
+}</div></div>
+<div class="command-card"><h4>forvalues</h4><p>Loop over numbers</p><div class="code"><span class="ck">forvalues</span> i = 1(1)10 {
+    <span class="ck">display</span> `i'
+}</div></div>
+<div class="command-card"><h4>while Loop</h4><p>Conditional looping</p><div class="code"><span class="ck">local</span> i = 1
+<span class="ck">while</span> `i' &lt;= 10 {
+    <span class="ck">local</span> i = `i' + 1
+}</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Macros &amp; Stored Results</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Local Macro</h4><p>Temporary storage</p><div class="code"><span class="ck">local</span> myVars price mpg weight
+<span class="ck">summarize</span> `myVars'</div></div>
+<div class="command-card"><h4>Global Macro</h4><p>Session-wide storage</p><div class="code"><span class="ck">global</span> controls mpg weight
+<span class="ck">regress</span> price $controls</div></div>
+<div class="command-card"><h4>r-class Results</h4><p>From general commands</p><div class="code"><span class="ck">summarize</span> price
+<span class="ck">return list</span>
+<span class="ck">gen</span> avg = r(mean)</div></div>
+<div class="command-card"><h4>e-class Results</h4><p>From estimation commands</p><div class="code"><span class="ck">regress</span> price mpg
+<span class="ck">ereturn list</span>
+<span class="ck">gen</span> n = e(N)</div></div>
+<div class="command-card"><h4>Scalars</h4><p>Store a single value</p><div class="code"><span class="ck">summarize</span> price
+<span class="ck">scalar</span> mymean = r(mean)
+<span class="ck">display</span> scalar(mymean)</div></div>
+<div class="command-card"><h4>Conditionals</h4><p>if / else if / else</p><div class="code"><span class="ck">local</span> x = 25
+
+<span class="ck">if</span> `x' &lt; 18 {
+    <span class="ck">display</span> <span class="cs">"Minor"</span>
+}
+<span class="ck">else if</span> `x' &lt; 65 {
+    <span class="ck">display</span> <span class="cs">"Adult"</span>
+}
+<span class="ck">else</span> {
+    <span class="ck">display</span> <span class="cs">"Senior"</span>
+}</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">String Functions</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Substring &amp; Length</h4><p>Extract and measure text</p><div class="code"><span class="ck">gen</span> first5 = substr(name, 1, 5)
+<span class="ck">gen</span> len = length(name)</div></div>
+<div class="command-card"><h4>Case &amp; Trim</h4><p>Change case, remove spaces</p><div class="code"><span class="ck">gen</span> up = upper(name)
+<span class="ck">gen</span> clean = strtrim(name)</div></div>
+<div class="command-card"><h4>Find &amp; Replace</h4><p>Substitute text</p><div class="code"><span class="ck">replace</span> name = subinstr(name, <span class="cs">"Dr."</span>, <span class="cs">"Doctor"</span>, .)</div></div>
+<div class="command-card"><h4>Word Extraction</h4><p>Get specific word</p><div class="code"><span class="ck">gen</span> w1 = word(name, 1)</div></div>
+</div>
+</div>
+</section>
+<section id="tests" class="section"><h2 class="section-title">🧪 Statistical Tests</h2><p class="section-desc">Hypothesis testing, ANOVA, correlation, non-parametric, survival, meta-analysis, and biostatistics</p>
+<div class="category"><h3 class="category-title">Descriptive &amp; Tables</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Frequency Table</h4><p>One-way distribution</p><div class="code"><span class="ck">tabulate</span> rep78
+<span class="ck">tabulate</span> rep78, missing</div></div>
+<div class="command-card"><h4>Cross Tabulation</h4><p>Two-way contingency table</p><div class="code"><span class="ck">tabulate</span> foreign rep78, row col</div></div>
+<div class="command-card"><h4>Table Stats</h4><p>Summary stats by group</p><div class="code"><span class="ck">tabstat</span> price mpg, by(foreign) stat(mean sd n)</div></div>
+<div class="command-card"><h4>By Group Summaries</h4><p>Repeat command by group</p><div class="code"><span class="ck">bysort</span> foreign: <span class="ck">summarize</span> price</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">z Tests</h3><div class="info-box"><strong>💡 Note:</strong> Requires known population standard deviation (σ)</div>
+<div class="command-grid">
+<div class="command-card"><h4>One-Sample z Test</h4><p>Test mean against hypothesised value (known σ)</p><div class="code"><span class="ck">ztest</span> mpg == 21, sd(5)</div></div>
+<div class="command-card"><h4>Two-Sample z Test (Independent Groups)</h4><p>Compare two groups</p><div class="code"><span class="ck">ztest</span> mpg, by(foreign) sd(5)</div></div>
+<div class="command-card"><h4>Two-Sample z Test (Two Variables)</h4><p>Compare two variables</p><div class="code"><span class="ck">ztest</span> var1 == var2, sd(5)</div></div>
+<div class="command-card"><h4>Paired z Test</h4><p>Compare two related measurements</p><div class="code"><span class="cc">* Using SD of differences:</span>
+<span class="ck">ztest</span> var1 == var2, sddiff(3)
+
+<span class="cc">* Using correlation:</span>
+<span class="ck">ztest</span> var1 == var2, corr(0.7) sd(5)</div></div>
+<div class="command-card"><h4>Immediate z Test (Summary Data)</h4><p>Calculate from summary statistics</p><div class="code"><span class="cc">* One-sample:</span>
+<span class="ck">ztesti</span> 100 85 15 90
+
+<span class="cc">* Two-sample:</span>
+<span class="ck">ztesti</span> 50 80 12 60 75 10</div></div>
+<div class="command-card"><h4>One-Sample Proportion Test</h4><p>Test proportion against hypothesised value</p><div class="code"><span class="ck">prtest</span> foreign == 0.5</div></div>
+<div class="command-card"><h4>Two-Sample Proportion Test</h4><p>Compare proportions between groups</p><div class="code"><span class="ck">prtest</span> expensive, by(foreign)</div></div>
+<div class="command-card"><h4>Immediate Proportion Test</h4><p>Calculate from summary data</p><div class="code"><span class="ck">prtesti</span> 50 0.4 50 0.6
+<span class="cc">* n₁=50, p₁=0.4, n₂=50, p₂=0.6</span></div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">t Tests</h3><div class="info-box"><strong>💡 Note:</strong> Used when population SD is unknown (most common case)</div>
+<div class="command-grid">
+<div class="command-card"><h4>One-Sample t Test</h4><p>Test mean against hypothesised value</p><div class="code"><span class="ck">ttest</span> mpg == 21</div></div>
+<div class="command-card"><h4>Independent t Test</h4><p>Compare two independent groups</p><div class="code"><span class="ck">ttest</span> mpg, by(foreign)</div></div>
+<div class="command-card"><h4>Paired t Test</h4><p>Compare two related measurements</p><div class="code"><span class="ck">ttest</span> var1 == var2</div></div>
+<div class="command-card"><h4>Welch's t Test (Unequal variances)</h4><p>Test for unequal variances first</p><div class="code"><span class="ck">sdtest</span> mpg, by(foreign)
+
+<span class="ck">ttest</span> mpg, by(foreign) unequal</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">ANOVA Family</h3>
+<div class="command-grid">
+<div class="command-card"><h4>One-Way ANOVA</h4><p>Compare means — 3+ groups</p><div class="code"><span class="ck">oneway</span> price rep78, bonferroni</div></div>
+<div class="command-card"><h4>Two-Way ANOVA</h4><p>Two categorical factors</p><div class="code"><span class="ck">anova</span> price foreign rep78</div></div>
+<div class="command-card"><h4>Factorial ANOVA</h4><p>With interaction term</p><div class="code"><span class="ck">anova</span> price foreign##rep78
+<span class="ck">margins</span> foreign#rep78</div></div>
+<div class="command-card"><h4>Linear Mixed Model (Repeated Measures)</h4><p>Same subjects over time</p><div class="code"><span class="ck">xtset</span> id time
+<span class="ck">mixed</span> y time || id:
+
+<span class="cc">* Classical repeated measures ANOVA:</span>
+<span class="ck">anova</span> y subject time subject#time</div></div>
+<div class="command-card"><h4>ANCOVA</h4><p>ANOVA controlling for covariate</p><div class="code"><span class="ck">regress</span> price i.foreign c.weight</div></div>
+<div class="command-card"><h4>MANOVA</h4><p>Multiple dependent variables</p><div class="code"><span class="ck">manova</span> price mpg weight = foreign rep78</div></div>
+<div class="command-card"><h4>MANCOVA</h4><p>MANOVA with covariates</p><div class="code"><span class="ck">manova</span> price mpg = foreign weight</div></div>
+<div class="command-card"><h4>Mixed ANOVA</h4><p>Between + within subject factors</p><div class="code"><span class="ck">mixed</span> y i.time i.group i.time#i.group || id:, reml</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Chi-Square &amp; Association</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Chi-Square Test</h4><p>Test independence of categorical variables</p><div class="code"><span class="ck">tabulate</span> foreign rep78, chi2 expected</div></div>
+<div class="command-card"><h4>Fisher's Exact Test</h4><p>Exact test for small samples</p><div class="code"><span class="ck">tabulate</span> foreign rep78, exact</div></div>
+<div class="command-card"><h4>Cramér's V</h4><p>Measure of association</p><div class="code"><span class="ck">tabulate</span> foreign rep78, v</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Correlation</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Pearson Correlation</h4><p>Linear association</p><div class="code"><span class="ck">correlate</span> price mpg weight
+<span class="ck">pwcorr</span> price mpg, sig star(0.05)</div></div>
+<div class="command-card"><h4>Spearman Correlation</h4><p>Rank-based, non-parametric</p><div class="code"><span class="ck">spearman</span> price mpg</div></div>
+<div class="command-card"><h4>Kendall's Tau</h4><p>Concordance-based</p><div class="code"><span class="ck">ktau</span> price mpg</div></div>
+<div class="command-card"><h4>Partial Correlation</h4><p>Controlling for covariates</p><div class="code"><span class="ck">pcorr</span> price mpg weight</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Non-Parametric Tests</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Mann-Whitney U</h4><p>Non-parametric independent t test</p><div class="code"><span class="ck">ranksum</span> mpg, by(foreign)</div></div>
+<div class="command-card"><h4>Wilcoxon Signed-Rank</h4><p>Non-parametric paired t test</p><div class="code"><span class="ck">signrank</span> var1 = var2
+<span class="ck">signrank</span> mpg = 21</div></div>
+<div class="command-card"><h4>Kruskal-Wallis</h4><p>Non-parametric one-way ANOVA</p><div class="code"><span class="ck">kwallis</span> price, by(rep78)</div></div>
+<div class="command-card"><h4>Friedman Test</h4><p>Non-parametric repeated measures</p><div class="code"><span class="ck">friedman</span> score, group(id) block(time)</div></div>
+<div class="command-card"><h4>Kolmogorov-Smirnov</h4><p>Compare two distributions</p><div class="code"><span class="ck">ksmirnov</span> mpg, by(foreign)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Assumption &amp; Diagnostic Tests</h3><div class="warning-box"><strong>⚠️ Run these AFTER fitting a model</strong> — Shapiro-Wilk and Levene's can also be standalone</div>
+<div class="command-grid">
+<div class="command-card"><h4>Shapiro-Wilk</h4><p>Test normality</p><div class="code"><span class="ck">swilk</span> mpg
+<span class="cc">* On residuals</span>
+<span class="ck">regress</span> price mpg
+<span class="ck">predict</span> resid, residuals
+<span class="ck">swilk</span> resid</div></div>
+<div class="command-card"><h4>Breusch-Pagan</h4><p>Heteroskedasticity</p><div class="code"><span class="ck">regress</span> price mpg weight
+<span class="ck">estat hettest</span>
+<span class="cc">* p < 0.05 = heteroskedasticity</span></div></div>
+<div class="command-card"><h4>VIF — Multicollinearity</h4><p>Variance inflation factors</p><div class="code"><span class="ck">regress</span> price mpg weight foreign
+<span class="ck">estat vif</span>
+<span class="cc">* VIF > 10 = high multicollinearity</span></div></div>
+<div class="command-card"><h4>Durbin-Watson</h4><p>Autocorrelation in residuals</p><div class="code"><span class="ck">tsset</span> time
+<span class="ck">regress</span> y x
+<span class="ck">estat dwatson</span>
+<span class="cc">* D ≈ 2 = no autocorrelation</span></div></div>
+<div class="command-card"><h4>Levene's Test</h4><p>Equality of variances</p><div class="code"><span class="ck">ssc install</span> robvar
+<span class="ck">robvar</span> mpg, by(foreign)</div></div>
+<div class="command-card"><h4>Ramsey RESET</h4><p>Functional form / omitted variables</p><div class="code"><span class="ck">regress</span> price mpg weight
+<span class="ck">estat ovtest</span>
+<span class="cc">* p < 0.05 = misspecification</span></div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">⏱️ Survival Analysis</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Declare Survival Data</h4><p>Set up time-to-event structure</p><div class="code"><span class="ck">stset</span> time, failure(died)
+<span class="ck">stset</span> time, failure(died) id(id) enter(t0)</div></div>
+<div class="command-card"><h4>Kaplan-Meier Curve</h4><p>Non-parametric survival curve</p><div class="code"><span class="ck">sts graph</span>
+<span class="ck">sts graph</span>, by(treatment) risktable</div></div>
+<div class="command-card"><h4>Log-Rank Test</h4><p>Test equality of survival curves</p><div class="code"><span class="ck">sts test</span> treatment
+<span class="ck">sts test</span> treatment, wilcoxon</div></div>
+<div class="command-card"><h4>Nelson-Aalen</h4><p>Cumulative hazard estimator</p><div class="code"><span class="ck">sts graph</span>, na by(treatment)</div></div>
+<div class="command-card"><h4>Life Table</h4><p>Actuarial method</p><div class="code"><span class="ck">ltable</span> time died, by(treatment) graph</div></div>
+<div class="command-card"><h4>Survival Summary</h4><p>Events and median survival time</p><div class="code"><span class="ck">stsum</span>
+<span class="ck">stsum</span>, by(treatment)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">🔬 Meta-Analysis</h3><div class="info-box"><strong>💡 Stata 16+:</strong> Native <code>meta</code> package built-in. Older: <code>ssc install metan</code></div>
+<div class="command-grid">
+<div class="command-card"><h4>Declare Meta Data</h4><p>Set up meta structure</p><div class="code"><span class="ck">meta set</span> logor selogor, studylabel(study)</div></div>
+<div class="command-card"><h4>Forest Plot</h4><p>Visualise effect sizes</p><div class="code"><span class="ck">meta forestplot</span>
+<span class="ck">meta forestplot</span>, by(subgroup)
+<span class="ck">meta forestplot</span>, nullrefline sort(year)</div></div>
+<div class="command-card"><h4>Fixed-Effect Model</h4><p>Assumes one true effect</p><div class="code"><span class="ck">meta summarize</span>, fixed
+<span class="ck">meta summarize</span>, fixed method(mhaenszel)</div></div>
+<div class="command-card"><h4>Random-Effects Model</h4><p>Between-study heterogeneity</p><div class="code"><span class="ck">meta summarize</span>, random
+<span class="ck">meta summarize</span>, random method(dlaird)</div></div>
+<div class="command-card"><h4>Heterogeneity (I², Q, τ²)</h4><p>Consistency across studies</p><div class="code"><span class="cc">* Included in meta summarize output:</span>
+<span class="cc">* I² = % variation from heterogeneity</span>
+<span class="cc">* Q statistic p-value</span>
+<span class="cc">* τ² = between-study variance</span>
+<span class="ck">meta summarize</span>, random</div></div>
+<div class="command-card"><h4>Funnel Plot</h4><p>Detect publication bias</p><div class="code"><span class="ck">meta funnelplot</span>
+<span class="ck">meta funnelplot</span>, contours(10 50 90)</div></div>
+<div class="command-card"><h4>Egger's &amp; Begg's Test</h4><p>Statistical test for publication bias</p><div class="code"><span class="ck">meta bias</span>, egger
+<span class="ck">meta bias</span>, begg</div></div>
+<div class="command-card"><h4>Meta-Regression</h4><p>Explain heterogeneity with moderators</p><div class="code"><span class="ck">meta regress</span> year quality
+<span class="ck">meta regress</span> year, bubbleplot</div></div>
+<div class="command-card"><h4>Leave-One-Out</h4><p>Sensitivity analysis</p><div class="code"><span class="ck">meta summarize</span>, leaveoneout</div></div>
+<div class="command-card"><h4>Cumulative Meta-Analysis</h4><p>Sequential addition of studies</p><div class="code"><span class="ck">meta summarize</span>, cumulative(year)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">🏥 Biostatistics</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Sensitivity &amp; Specificity</h4><p>Diagnostic test performance</p><div class="code"><span class="ck">ssc install</span> diagt
+<span class="ck">diagt</span> disease test</div></div>
+<div class="command-card"><h4>ROC Curve &amp; AUC</h4><p>Discriminative ability</p><div class="code"><span class="cc">* Modern command:</span>
+<span class="ck">roctab</span> disease score
+
+<span class="cc">* Or after logistic model:</span>
+<span class="ck">logistic</span> disease predictors
+<span class="ck">lroc</span>
+
+<span class="cc">* Compare multiple ROC curves:</span>
+<span class="ck">roccomp</span> disease score1 score2</div></div>
+<div class="command-card"><h4>Odds Ratio (Case-Control)</h4><p>OR with CI</p><div class="code"><span class="ck">cc</span> case exposed, woolf</div></div>
+<div class="command-card"><h4>Risk Ratio (Cohort)</h4><p>RR with CI</p><div class="code"><span class="ck">cs</span> case exposed</div></div>
+<div class="command-card"><h4>Incidence Rate Ratio</h4><p>Person-time analysis</p><div class="code"><span class="ck">ir</span> cases exposed person_time, exact</div></div>
+<div class="command-card"><h4>Kappa — Inter-rater Agreement</h4><p>Agreement beyond chance</p><div class="code"><span class="ck">kap</span> rater1 rater2
+<span class="ck">kap</span> rater1 rater2, wgt(w1)</div></div>
+<div class="command-card"><h4>Sample Size — Mean</h4><p>Power analysis for t test</p><div class="code"><span class="ck">power twomeans</span> 0 5, sd(10)
+<span class="ck">power twomeans</span> 0 5, sd(10) n(50)</div></div>
+<div class="command-card"><h4>Sample Size — Proportion</h4><p>Power for proportion test</p><div class="code"><span class="ck">power twoproportions</span> 0.3 0.5
+<span class="ck">power oneproportion</span> 0.5, p(0.65)</div></div>
+<div class="command-card"><h4>Power Curve</h4><p>Visualise power over sample sizes</p><div class="code"><span class="ck">power twomeans</span> 0 5, sd(10) n(10(10)200) graph</div></div>
+<div class="command-card"><h4>Bland-Altman</h4><p>Method comparison / agreement</p><div class="code"><span class="ck">ssc install</span> blandaltman
+<span class="ck">blandaltman</span> method1 method2</div></div>
+</div>
+</div>
+</section>
+<section id="regression" class="section"><h2 class="section-title">📈 Regression &amp; Modeling</h2><p class="section-desc">Linear, binary, count, panel, survival, time series, and multivariate models</p>
+<div class="category"><h3 class="category-title">Linear Regression</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Simple Linear Regression</h4><p>One predictor, continuous outcome</p><div class="code"><span class="ck">regress</span> price mpg</div></div>
+<div class="command-card"><h4>Multiple Linear Regression</h4><p>Multiple predictors</p><div class="code"><span class="ck">regress</span> price mpg weight foreign
+<span class="ck">regress</span> price mpg weight, vce(robust)</div></div>
+<div class="command-card"><h4>Polynomial Regression</h4><p>Nonlinear curved relationship</p><div class="code"><span class="ck">regress</span> price c.mpg##c.mpg</div></div>
+<div class="command-card"><h4>Factor Variables &amp; Interactions</h4><p>Categorical predictors</p><div class="code"><span class="ck">regress</span> price i.rep78
+<span class="ck">regress</span> price i.foreign##c.mpg</div></div>
+<div class="command-card"><h4>Clustered SE</h4><p>Cluster-robust standard errors</p><div class="code"><span class="ck">regress</span> price mpg, vce(cluster rep78)</div></div>
+<div class="command-card"><h4>Predictions &amp; Residuals</h4><p>Fitted values and residuals</p><div class="code"><span class="ck">predict</span> yhat
+<span class="ck">predict</span> resid, residuals
+<span class="ck">rvfplot</span>, yline(0)</div></div>
+<div class="command-card"><h4>Marginal Effects</h4><p>Average and conditional margins</p><div class="code"><span class="ck">margins</span>, dydx(*)
+<span class="ck">margins</span> foreign
+<span class="ck">marginsplot</span></div></div>
+<div class="command-card"><h4>Test Coefficients</h4><p>Hypothesis tests on parameters</p><div class="code"><span class="ck">test</span> mpg = 0
+<span class="ck">test</span> mpg = weight
+<span class="ck">lincom</span> mpg + weight</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Binary &amp; Categorical Outcome Models</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Logistic Regression</h4><p>Binary outcome — log-odds / OR</p><div class="code"><span class="ck">logit</span> foreign mpg price
+<span class="ck">logistic</span> foreign mpg price
+
+<span class="cc">* Predicted probabilities:</span>
+<span class="ck">predict</span> p, pr
+
+<span class="cc">* Classification table:</span>
+<span class="ck">estat classification</span></div></div>
+<div class="command-card"><h4>Probit Regression</h4><p>Binary outcome — normal CDF</p><div class="code"><span class="ck">probit</span> foreign mpg price
+<span class="ck">margins</span>, dydx(*) atmeans</div></div>
+<div class="command-card"><h4>Multinomial Logistic</h4><p>3+ unordered categories</p><div class="code"><span class="ck">mlogit</span> rep78 price mpg
+<span class="ck">mlogit</span>, rrr
+<span class="ck">margins</span>, dydx(*)</div></div>
+<div class="command-card"><h4>Ordinal Logistic</h4><p>Ordered categorical outcome</p><div class="code"><span class="ck">ologit</span> rep78 price mpg
+
+<span class="cc">* Test proportional odds assumption:</span>
+<span class="ck">ssc install</span> brant
+<span class="ck">brant</span></div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Count &amp; Rate Models</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Poisson Regression</h4><p>Count outcome data</p><div class="code"><span class="ck">poisson</span> count_var x1 x2, irr</div></div>
+<div class="command-card"><h4>Negative Binomial</h4><p>Overdispersed count data</p><div class="code"><span class="ck">nbreg</span> count_var x1 x2, irr</div></div>
+<div class="command-card"><h4>Zero-Inflated Poisson</h4><p>Excess zeros in count data</p><div class="code"><span class="ck">zip</span> count_var x1, inflate(x2)</div></div>
+<div class="command-card"><h4>Zero-Inflated Neg. Binomial</h4><p>Overdispersion + excess zeros</p><div class="code"><span class="ck">zinb</span> count_var x1, inflate(x2)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Panel &amp; Multilevel Models</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Declare Panel Data</h4><p>Set panel structure</p><div class="code"><span class="ck">xtset</span> id year</div></div>
+<div class="command-card"><h4>Fixed Effects</h4><p>Within-unit variation</p><div class="code"><span class="ck">xtreg</span> y x1 x2, fe</div></div>
+<div class="command-card"><h4>Random Effects</h4><p>Between + within variation</p><div class="code"><span class="ck">xtreg</span> y x1 x2, re</div></div>
+<div class="command-card"><h4>Hausman Test</h4><p>FE vs RE decision</p><div class="code"><span class="ck">xtreg</span> y x1 x2, fe
+<span class="ck">est store</span> FE
+
+<span class="ck">xtreg</span> y x1 x2, re
+<span class="ck">est store</span> RE
+
+<span class="ck">hausman</span> FE RE, sigmamore</div></div>
+<div class="command-card"><h4>Mixed Effects (MLM)</h4><p>Random intercept and slope</p><div class="code"><span class="ck">mixed</span> y x1 || id:
+<span class="ck">mixed</span> y x1 || id: x1, reml
+<span class="ck">estat icc</span></div></div>
+<div class="command-card"><h4>Repeated Measures</h4><p>Within-subject time effects</p><div class="code"><span class="ck">mixed</span> y i.time || id:
+<span class="ck">marginsplot</span></div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Cox &amp; Parametric Survival Models</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Cox PH Model</h4><p>Semi-parametric hazard regression</p><div class="code"><span class="ck">stset</span> time, failure(died)
+<span class="ck">stcox</span> age i.treatment, hr nolog
+<span class="ck">estat phtest</span>, detail</div></div>
+<div class="command-card"><h4>Parametric Survival</h4><p>Weibull / exponential / log-normal</p><div class="code"><span class="ck">streg</span> age treatment, dist(weibull) hr
+<span class="ck">streg</span> age treatment, dist(lognormal)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Time Series Models</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Declare Time Series</h4><p>Set time variable</p><div class="code"><span class="ck">tsset</span> date, yearly
+<span class="ck">tsset</span> date, daily</div></div>
+<div class="command-card"><h4>Lags, Leads &amp; Differences</h4><p>Time series operators</p><div class="code"><span class="ck">gen</span> lag1 = L1.sales
+<span class="ck">gen</span> lead1 = F1.sales
+<span class="ck">gen</span> diff = D.sales</div></div>
+<div class="command-card"><h4>ACF &amp; PACF</h4><p>Identify ARIMA order</p><div class="code"><span class="ck">ac</span> y
+<span class="ck">pac</span> y</div></div>
+<div class="command-card"><h4>ARIMA</h4><p>Autoregressive integrated moving average</p><div class="code"><span class="ck">arima</span> y, ar(1) diff(1) ma(1)
+<span class="ck">tsline</span> y</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Multivariate &amp; Dimensionality Reduction</h3>
+<div class="command-grid">
+<div class="command-card"><h4>PCA</h4><p>Principal component analysis</p><div class="code"><span class="ck">pca</span> price mpg weight length
+<span class="ck">screeplot</span>
+<span class="ck">predict</span> pc1 pc2</div></div>
+<div class="command-card"><h4>Factor Analysis</h4><p>Latent factor identification</p><div class="code"><span class="ck">factor</span> price mpg weight, pcf
+<span class="ck">rotate</span>, varimax
+<span class="ck">screeplot</span></div></div>
+<div class="command-card"><h4>Cluster Analysis</h4><p>Group observations by similarity</p><div class="code"><span class="ck">cluster wardslinkage</span> price mpg, name(myclus)
+<span class="ck">cluster dendrogram</span> myclus
+<span class="ck">cluster kmeans</span> price mpg, k(3)</div></div>
+<div class="command-card"><h4>Discriminant Analysis</h4><p>Classify into groups</p><div class="code"><span class="ck">discrim lda</span> price mpg, group(foreign)
+<span class="ck">estat classtable</span></div></div>
+</div>
+</div>
+</section>
+<section id="visualization" class="section"><h2 class="section-title">📊 Data Visualization</h2><p class="section-desc">Create publication-quality graphs and charts in Stata</p>
+<div class="category"><h3 class="category-title">Basic Plots</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Scatter Plot</h4><p>Two continuous variables</p><div class="code"><span class="ck">scatter</span> price mpg
+<span class="ck">scatter</span> price mpg, mlabel(make)</div></div>
+<div class="command-card"><h4>Line Plot</h4><p>Connect points with lines</p><div class="code"><span class="ck">twoway line</span> price mpg, sort
+<span class="ck">twoway connected</span> price mpg</div></div>
+<div class="command-card"><h4>Histogram</h4><p>Distribution of single variable</p><div class="code"><span class="ck">histogram</span> mpg
+<span class="ck">histogram</span> mpg, normal</div></div>
+<div class="command-card"><h4>Box Plot</h4><p>Distribution by groups</p><div class="code"><span class="ck">graph box</span> mpg, over(foreign)
+<span class="ck">graph hbox</span> mpg, over(rep78)</div></div>
+<div class="command-card"><h4>Bar Chart</h4><p>Compare group means</p><div class="code"><span class="ck">graph bar</span> (mean) price, over(foreign)
+<span class="ck">graph hbar</span> (mean) price, over(rep78)</div></div>
+<div class="command-card"><h4>Dot Plot</h4><p>Alternative to bar chart</p><div class="code"><span class="ck">graph dot</span> (mean) price, over(foreign)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Advanced Plots</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Scatter + Fit Line</h4><p>Overlay plots</p><div class="code"><span class="ck">twoway</span> (scatter price mpg) ///
+       (lfit price mpg)</div></div>
+<div class="command-card"><h4>Linear Fit with CI</h4><p>Regression line with confidence band</p><div class="code"><span class="ck">twoway</span> (lfitci price mpg) ///
+       (scatter price mpg)</div></div>
+<div class="command-card"><h4>Quadratic Fit</h4><p>Curved regression line</p><div class="code"><span class="ck">twoway</span> (qfit price mpg) ///
+       (scatter price mpg)</div></div>
+<div class="command-card"><h4>Lowess Smoothing</h4><p>Non-parametric smoother</p><div class="code"><span class="ck">twoway</span> (lowess price mpg) ///
+       (scatter price mpg)</div></div>
+<div class="command-card"><h4>Matrix Scatter</h4><p>All pairwise scatter plots</p><div class="code"><span class="ck">graph matrix</span> price mpg weight</div></div>
+<div class="command-card"><h4>Faceted by Group</h4><p>Separate panels per group</p><div class="code"><span class="ck">scatter</span> price mpg, by(foreign, total)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Customization</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Titles &amp; Notes</h4><p>Add descriptive text</p><div class="code"><span class="ck">scatter</span> price mpg, ///
+    title(<span class="cs">"Price vs MPG"</span>) ///
+    subtitle(<span class="cs">"1978 Cars"</span>) ///
+    note(<span class="cs">"Source: Auto data"</span>)</div></div>
+<div class="command-card"><h4>Axis Labels</h4><p>Customise axis titles</p><div class="code"><span class="ck">scatter</span> price mpg, ///
+    xtitle(<span class="cs">"Miles per Gallon"</span>) ///
+    ytitle(<span class="cs">"Price (USD)"</span>)</div></div>
+<div class="command-card"><h4>Colors &amp; Markers</h4><p>Change appearance</p><div class="code"><span class="ck">scatter</span> price mpg, ///
+    mcolor(blue) msymbol(circle) msize(medium)</div></div>
+<div class="command-card"><h4>Schemes</h4><p>Set default or per-graph theme</p><div class="code"><span class="cc">* Set default for all graphs</span>
+<span class="ck">set scheme</span> s1color
+<span class="cc">* Or override per graph only</span>
+<span class="ck">scatter</span> price mpg, scheme(economist)</div></div>
+<div class="command-card"><h4>Legend</h4><p>Customise legend labels</p><div class="code"><span class="ck">twoway</span> (scatter y1 x) ///
+       (scatter y2 x), ///
+    legend(label(1 <span class="cs">"Series 1"</span>) ///
+           label(2 <span class="cs">"Series 2"</span>))</div></div>
+<div class="command-card"><h4>Graph Size</h4><p>Set dimensions</p><div class="code"><span class="ck">scatter</span> price mpg, xsize(8) ysize(6)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Export Graphs</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Save (Stata format)</h4><p>Save as .gph</p><div class="code"><span class="ck">graph save</span> <span class="cs">"mygraph.gph"</span>, replace</div></div>
+<div class="command-card"><h4>Export PNG</h4><p>High-res image</p><div class="code"><span class="ck">graph export</span> <span class="cs">"mygraph.png"</span>, replace width(1200)</div></div>
+<div class="command-card"><h4>Export PDF</h4><p>For publications</p><div class="code"><span class="ck">graph export</span> <span class="cs">"mygraph.pdf"</span>, replace</div></div>
+<div class="command-card"><h4>Combine Graphs</h4><p>Merge multiple plots</p><div class="code"><span class="ck">graph combine</span> plot1.gph plot2.gph</div></div>
+</div>
+</div>
+</section>
+<section id="reference" class="section"><h2 class="section-title">📖 Quick Reference</h2><p class="section-desc">Operators, functions, special variables, missing values, and useful packages</p>
+<div class="category"><h3 class="category-title">Operators</h3>
+<div class="table-container"><table>
+<tr><th>Type</th><th>Operator</th><th>Description</th><th>Example</th></tr>
+<tr><td rowspan="5"><strong>Arithmetic</strong></td><td><code>+</code></td><td>Addition</td><td><code>gen total = x + y</code></td></tr>
+<tr><td><code>-</code></td><td>Subtraction</td><td><code>gen diff = x - y</code></td></tr>
+<tr><td><code>*</code></td><td>Multiplication</td><td><code>gen prod = x * y</code></td></tr>
+<tr><td><code>/</code></td><td>Division</td><td><code>gen ratio = x / y</code></td></tr>
+<tr><td><code>^</code></td><td>Power</td><td><code>gen sq = x^2</code></td></tr>
+<tr><td rowspan="6"><strong>Logical</strong></td><td><code>==</code></td><td>Equal to</td><td><code>keep if x == 5</code></td></tr>
+<tr><td><code>!=</code></td><td>Not equal</td><td><code>keep if x != 5</code></td></tr>
+<tr><td><code>&gt;</code></td><td>Greater than</td><td><code>keep if x &gt; 5</code></td></tr>
+<tr><td><code>&lt;</code></td><td>Less than</td><td><code>keep if x &lt; 5</code></td></tr>
+<tr><td><code>&amp;</code></td><td>AND</td><td><code>if x &gt; 5 &amp; y &lt; 10</code></td></tr>
+<tr><td><code>|</code></td><td>OR</td><td><code>if x == 5 | y == 5</code></td></tr>
+</table></div></div>
+<div class="category"><h3 class="category-title">Common Functions</h3>
+<div class="table-container"><table>
+<tr><th>Function</th><th>Description</th><th>Example</th></tr>
+<tr><td><code>log()</code></td><td>Natural logarithm</td><td><code>gen lprice = log(price)</code></td></tr>
+<tr><td><code>exp()</code></td><td>Exponential e^x</td><td><code>gen expx = exp(x)</code></td></tr>
+<tr><td><code>sqrt()</code></td><td>Square root</td><td><code>gen sqrtx = sqrt(x)</code></td></tr>
+<tr><td><code>abs()</code></td><td>Absolute value</td><td><code>gen absx = abs(x)</code></td></tr>
+<tr><td><code>round()</code></td><td>Round to integer</td><td><code>gen r = round(price)</code></td></tr>
+<tr><td><code>int()</code></td><td>Integer part</td><td><code>gen i = int(price)</code></td></tr>
+<tr><td><code>mod()</code></td><td>Modulus / remainder</td><td><code>gen rem = mod(x,5)</code></td></tr>
+<tr><td><code>max()</code></td><td>Maximum of arguments</td><td><code>gen m = max(x,y,z)</code></td></tr>
+<tr><td><code>min()</code></td><td>Minimum of arguments</td><td><code>gen m = min(x,y,z)</code></td></tr>
+</table></div></div>
+<div class="category"><h3 class="category-title">Special Variables</h3>
+<div class="command-grid">
+<div class="command-card"><h4>_n</h4><p>Current observation number</p><div class="code"><span class="ck">gen</span> id = _n</div></div>
+<div class="command-card"><h4>_N</h4><p>Total observations</p><div class="code"><span class="ck">gen</span> total = _N</div></div>
+<div class="command-card"><h4>_merge</h4><p>Merge result indicator</p><div class="code"><span class="ck">tab</span> _merge</div></div>
+<div class="command-card"><h4>e(sample)</h4><p>Estimation sample indicator</p><div class="code"><span class="ck">predict</span> yhat <span class="ck">if</span> e(sample)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">Missing Values</h3><div class="warning-box"><strong>⚠️ Important:</strong> In Stata, missing <code>.</code> is treated as the <em>largest</em> positive number — always handle carefully!</div>
+<div class="command-grid">
+<div class="command-card"><h4>Check Missing</h4><p>Count missing obs</p><div class="code"><span class="ck">count if</span> missing(price)
+<span class="ck">count if</span> price == .</div></div>
+<div class="command-card"><h4>Exclude Missing</h4><p>Filter correctly</p><div class="code"><span class="ck">keep if</span> !missing(price)</div></div>
+<div class="command-card"><h4>Replace Missing</h4><p>Fill with mean or value</p><div class="code"><span class="ck">replace</span> price = 0 <span class="ck">if</span> missing(price)
+<span class="ck">egen</span> avg = mean(price)
+<span class="ck">replace</span> price = avg <span class="ck">if</span> missing(price)</div></div>
+<div class="command-card"><h4>Drop Missing</h4><p>Remove rows with missing</p><div class="code"><span class="ck">drop if</span> missing(price)</div></div>
+</div>
+</div>
+<div class="category"><h3 class="category-title">User-Written Packages</h3><div class="success-box"><strong>💡 Tip:</strong> Install commands from SSC (Statistical Software Components)</div>
+<div class="command-grid">
+<div class="command-card"><h4>estout</h4><p>Export regression tables</p><div class="code"><span class="ck">ssc install</span> estout</div></div>
+<div class="command-card"><h4>coefplot</h4><p>Plot regression coefficients</p><div class="code"><span class="ck">ssc install</span> coefplot</div></div>
+<div class="command-card"><h4>binscatter</h4><p>Binned scatter plots</p><div class="code"><span class="ck">ssc install</span> binscatter</div></div>
+<div class="command-card"><h4>outreg2</h4><p>Export results to Word/Excel</p><div class="code"><span class="ck">ssc install</span> outreg2</div></div>
+<div class="command-card"><h4>ivreg2</h4><p>Enhanced IV regression</p><div class="code"><span class="ck">ssc install</span> ivreg2</div></div>
+<div class="command-card"><h4>reghdfe</h4><p>High-dimensional fixed effects</p><div class="code"><span class="ck">ssc install</span> reghdfe</div></div>
+</div>
+</div>
+</section>
+
+<section id="examples" class="section"><h2 class="section-title">📚 Complete Workflow Examples</h2><p class="section-desc">Real-world analysis workflows from data loading to results export</p>
+
+<div class="success-box"><strong>💡 Professional Tip:</strong> These complete examples show full workflows, not just isolated commands. This is essential for real research projects.</div>
+
+<div class="category"><h3 class="category-title">Linear Regression Workflow</h3>
+<div class="command-grid">
+<div class="command-card" style="grid-column: span 2;"><h4>Complete Linear Regression Example</h4><p>Full workflow from data exploration to diagnostics</p><div class="code"><span class="cc">* Load example dataset</span>
+<span class="ck">sysuse</span> auto, clear
+
+<span class="cc">* Explore data</span>
+<span class="ck">describe</span>
+<span class="ck">summarize</span> price mpg weight
+
+<span class="cc">* Visualize relationship</span>
+<span class="ck">scatter</span> price mpg
+
+<span class="cc">* Fit regression model</span>
+<span class="ck">regress</span> price mpg weight
+
+<span class="cc">* Check multicollinearity</span>
+<span class="ck">estat vif</span>
+
+<span class="cc">* Check heteroskedasticity</span>
+<span class="ck">estat hettest</span>
+
+<span class="cc">* Predict fitted values</span>
+<span class="ck">predict</span> price_hat
+
+<span class="cc">* Plot fitted vs actual</span>
+<span class="ck">scatter</span> price price_hat
+
+<span class="cc">* Save dataset</span>
+<span class="ck">save</span> auto_analysis.dta, replace</div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Logistic Regression Workflow</h3>
+<div class="command-grid">
+<div class="command-card" style="grid-column: span 2;"><h4>Complete Logistic Regression Example</h4><p>Binary outcome analysis with diagnostics</p><div class="code"><span class="ck">sysuse</span> auto, clear
+
+<span class="cc">* Fit logistic model</span>
+<span class="ck">logistic</span> foreign mpg weight
+
+<span class="cc">* Show odds ratios</span>
+<span class="ck">logistic</span> foreign mpg weight, or
+
+<span class="cc">* Predict probability</span>
+<span class="ck">predict</span> prob, pr
+
+<span class="cc">* ROC curve</span>
+<span class="ck">lroc</span>
+
+<span class="cc">* Classification accuracy</span>
+<span class="ck">estat classification</span></div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Survival Analysis Workflow</h3>
+<div class="command-grid">
+<div class="command-card" style="grid-column: span 2;"><h4>Complete Cox Survival Example</h4><p>Time-to-event analysis with diagnostics</p><div class="code"><span class="ck">sysuse</span> cancer, clear
+
+<span class="cc">* Declare survival data</span>
+<span class="ck">stset</span> studytime, failure(died)
+
+<span class="cc">* Kaplan-Meier curve</span>
+<span class="ck">sts graph</span>
+
+<span class="cc">* Cox regression</span>
+<span class="ck">stcox</span> drug age
+
+<span class="cc">* Test proportional hazards</span>
+<span class="ck">estat phtest</span></div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Professional Do-File Template</h3>
+<div class="command-grid">
+<div class="command-card" style="grid-column: span 2;"><h4>Production-Ready Do-File Structure</h4><p>Industry-standard template for reproducible research</p><div class="code"><span class="cc">*************************************************</span>
+<span class="cc">* Project: Analysis Name</span>
+<span class="cc">* Author: Monu Prajapati</span>
+<span class="cc">* Date: 2026</span>
+<span class="cc">*************************************************</span>
+
+<span class="ck">version</span> 18
+<span class="ck">clear all</span>
+<span class="ck">set more off</span>
+
+<span class="cc">* Start log</span>
+<span class="ck">log using</span> <span class="cs">"analysis.log"</span>, replace
+
+<span class="cc">* Load data</span>
+<span class="ck">use</span> <span class="cs">"data.dta"</span>, clear
+
+<span class="cc">* Analysis code here</span>
+
+<span class="cc">* Save results</span>
+<span class="ck">save</span> <span class="cs">"data_final.dta"</span>, replace
+
+<span class="cc">* Close log</span>
+<span class="ck">log close</span>
+<span class="cc">*************************************************</span></div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Regression Diagnostics</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Residual Analysis</h4><p>Check regression assumptions</p><div class="code"><span class="cc">* Residual plot</span>
+<span class="ck">rvfplot</span>
+
+<span class="cc">* Normality test</span>
+<span class="ck">predict</span> resid, residuals
+<span class="ck">swilk</span> resid</div></div>
+<div class="command-card"><h4>Model Specification</h4><p>Test for omitted variables</p><div class="code"><span class="cc">* Specification test</span>
+<span class="ck">estat ovtest</span>
+
+<span class="cc">* Influence statistics</span>
+<span class="ck">predict</span> cooksd, cooksd</div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Missing Data & Export</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Missing Data Handling</h4><p>Identify and handle missing values</p><div class="code"><span class="cc">* Summary of missing data</span>
+<span class="ck">misstable summarize</span>
+
+<span class="cc">* Drop missing observations</span>
+<span class="ck">drop if</span> missing(price)
+
+<span class="cc">* Impute with mean</span>
+<span class="ck">summarize</span> price
+<span class="ck">replace</span> price = r(mean) <span class="ck">if</span> missing(price)</div></div>
+<div class="command-card"><h4>Export Results</h4><p>Save tables and data</p><div class="code"><span class="cc">* Export regression table</span>
+<span class="ck">ssc install</span> outreg2
+<span class="ck">outreg2 using</span> results.doc, replace
+
+<span class="cc">* Export dataset</span>
+<span class="ck">export excel using</span> data.xlsx, replace
+
+<span class="cc">* Export graph</span>
+<span class="ck">graph export</span> plot.png, replace</div></div>
+</div>
+</div>
+
+</section>
+</div><!-- /ctr -->
+
+<div class="footer">
+  <div class="fc">
+    <h3>📞 Contact</h3>
+    <p style="font-size:1.25rem;margin:1rem 0"><strong>Monu Prajapati</strong></p>
+    <p style="opacity:.9;margin-bottom:2rem">Statistician | Biostatistician</p>
+    <div class="cg">
+      <div class="cc2"><div class="ico">📱</div><div class="lbl">Mobile</div><div class="val">+91 7433863551</div></div>
+      <div class="cc2"><div class="ico">✉️</div><div class="lbl">Email</div><div class="val"><a href="mailto:prajpapatimonu@gmail.com">prajpapatimonu@gmail.com</a></div></div>
+    </div>
+    <p style="margin-top:2rem;opacity:.7">© 2026 Monu Prajapati. All rights reserved.</p>
+    <p style="opacity:.5;font-size:.875rem;margin-top:.5rem">Stata is a registered trademark of StataCorp LLC. This guide is for educational purposes only. | <a href="https://www.stata.com" target="_blank" style="color:#00c896">stata.com</a></p>
+  </div>
+</div>
+
+<button class="stb" id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// Nav
+var burger=document.getElementById('burger'),nav=document.getElementById('mainNav');
+burger.addEventListener('click',function(){burger.classList.toggle('open');nav.classList.toggle('open');});
+document.querySelectorAll('.ni').forEach(function(n){
+  n.addEventListener('click',function(){
+    burger.classList.remove('open');nav.classList.remove('open');
+    document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});
+    n.classList.add('active');
+    var t=document.getElementById(n.getAttribute('data-s'));
+    if(t)t.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+document.addEventListener('click',function(e){
+  if(!burger.contains(e.target)&&!nav.contains(e.target)){burger.classList.remove('open');nav.classList.remove('open');}
+});
+
+// Scroll top
+var stb=document.getElementById('stb');
+window.addEventListener('scroll',function(){stb.classList.toggle('vis',window.scrollY>300);});
+
+// Search
+var sBtn=document.getElementById('sBtn'),sOverlay=document.getElementById('sOverlay'),
+    sInput=document.getElementById('sInput'),sResults=document.getElementById('sResults'),
+    sClose=document.getElementById('sClose');
+var idx=[];
+document.querySelectorAll('.command-card').forEach(function(card){
+  var h=card.querySelector('h4')?card.querySelector('h4').innerText:'';
+  var d=card.querySelector('p')?card.querySelector('p').innerText:'';
+  var co=card.querySelector('.code')?card.querySelector('.code').innerText:'';
+  var sec=card.closest('.section');
+  var sid=sec?sec.id:'';
+  var sn=sec&&sec.querySelector('.section-title')?sec.querySelector('.section-title').innerText:sid;
+  if(h)idx.push({h:h,d:d,co:co,sid:sid,sn:sn,card:card});
+});
+function openS(){sOverlay.classList.add('open');sInput.value='';sResults.innerHTML='<div class="se">Start typing to search…</div>';setTimeout(function(){sInput.focus();},50);}
+function closeS(){sOverlay.classList.remove('open');}
+sBtn.addEventListener('click',openS);
+sClose.addEventListener('click',closeS);
+sOverlay.addEventListener('click',function(e){if(e.target===sOverlay)closeS();});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')closeS();
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openS();}
+});
+sInput.addEventListener('input',function(){
+  var q=this.value.trim().toLowerCase();
+  if(!q){sResults.innerHTML='<div class="se">Start typing to search…</div>';return;}
+  var hits=idx.filter(function(i){return i.h.toLowerCase().includes(q)||i.d.toLowerCase().includes(q)||i.co.toLowerCase().includes(q);}).slice(0,12);
+  if(!hits.length){sResults.innerHTML='<div class="se">No results for "<strong>'+q+'</strong>"</div>';return;}
+  sResults.innerHTML=hits.map(function(h){
+    return '<div class="sri" data-sid="'+h.sid+'"><div class="rt">'+h.h+'</div><div class="rs">📂 '+h.sn.replace(/^[^\w]+/,'')+'</div><div class="rd">'+h.d+'</div></div>';
+  }).join('');
+  sResults.querySelectorAll('.sri').forEach(function(el,i){
+    el.addEventListener('click',function(){
+      var sid=this.getAttribute('data-sid');
+      document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('active');});
+      document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});
+      var ts=document.getElementById(sid);if(ts)ts.classList.add('active');
+      var tn=document.querySelector('[data-s="'+sid+'"]');if(tn)tn.classList.add('active');
+      closeS();
+      setTimeout(function(){
+        hits[i].card.scrollIntoView({behavior:'smooth',block:'center'});
+        hits[i].card.style.borderColor='var(--a)';
+        setTimeout(function(){hits[i].card.style.borderColor='';},2000);
+      },300);
+    });
+  });
+});
+</script>
+</body>
+</html>
