@@ -9,96 +9,191 @@
 :root{--p:#0066cc;--pd:#004d99;--g:#00c896;--a:#ff6b35;--dk:#1a1a2e;--gr:#94a3b8;--gl:#e2e8f0;--bg:#f8fafc}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',sans-serif;line-height:1.6;color:var(--dk);background:var(--bg)}
-/* Header */
-.hdr{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;padding:3.5rem 2rem;text-align:center}
-.hdr h1{font-size:2.75rem;font-weight:700;margin-bottom:1rem;letter-spacing:-0.5px}
-.hdr .sub{font-size:1.25rem;opacity:.95;margin-bottom:0}
-.badge{display:inline-block;background:rgba(255,255,255,.2);padding:.75rem 1.5rem;border-radius:50px;font-weight:600;border:2px solid rgba(255,255,255,.3)}
-/* Nav */
-.nav-wrap{position:sticky;top:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:100;border-bottom:3px solid var(--p)}
-.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;position:relative}
-.burger{display:none;background:none;border:none;cursor:pointer;padding:1rem 1.25rem;flex-direction:column;gap:5px;flex-shrink:0}
-.burger span{display:block;width:24px;height:2.5px;background:var(--dk);border-radius:2px;transition:all .3s}
+
+/* ─── HEADER ─── */
+.hdr{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;padding:2.5rem 1.25rem 2rem;text-align:center}
+.hdr h1{font-size:clamp(1.4rem,5vw,2.75rem);font-weight:700;margin-bottom:.75rem;letter-spacing:-0.3px;line-height:1.25}
+.hdr .sub{font-size:clamp(.9rem,3vw,1.25rem);opacity:.95}
+
+/* ─── STICKY NAV ─── */
+.nav-wrap{position:sticky;top:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:100;border-bottom:3px solid var(--p)}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:stretch}
+
+/* hamburger */
+.burger{display:none;background:none;border:none;cursor:pointer;padding:.9rem 1.1rem;flex-direction:column;gap:5px;flex-shrink:0;align-self:stretch}
+.burger span{display:block;width:22px;height:2.5px;background:var(--dk);border-radius:2px;transition:all .3s}
 .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .burger.open span:nth-child(2){opacity:0}
 .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.nav{display:flex;flex:1;overflow-x:auto}
-.ni{flex:1;min-width:120px;padding:1.1rem .8rem;color:var(--dk);font-weight:600;text-align:center;border-bottom:3px solid transparent;transition:all .3s;white-space:nowrap;cursor:pointer;user-select:none;font-size:.86rem}
+
+/* desktop nav */
+.nav{display:flex;flex:1;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.ni{flex:1;min-width:110px;padding:1rem .6rem;color:var(--dk);font-weight:600;text-align:center;border-bottom:3px solid transparent;transition:all .25s;white-space:nowrap;cursor:pointer;user-select:none;font-size:.82rem;border-bottom:3px solid transparent}
 .ni:hover,.ni.active{background:var(--p);color:#fff;border-bottom-color:var(--a)}
-.sbtn{background:var(--p);border:none;color:#fff;font-size:1.2rem;padding:0 1.2rem;cursor:pointer;min-height:52px;transition:background .2s;flex-shrink:0}
+
+.sbtn{background:var(--p);border:none;color:#fff;font-size:1.15rem;padding:0 1rem;cursor:pointer;min-height:48px;min-width:48px;transition:background .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .sbtn:hover{background:var(--pd)}
-/* Search overlay */
-.so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:flex-start;justify-content:center;padding-top:80px}
+
+/* ─── SEARCH OVERLAY ─── */
+.so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;align-items:flex-start;justify-content:center;padding-top:60px}
 .so.open{display:flex}
-.sb{background:#fff;border-radius:16px;width:90%;max-width:680px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
-.siw{display:flex;align-items:center;padding:1rem 1.25rem;border-bottom:2px solid var(--gl);gap:.75rem}
-.siw span{font-size:1.3rem}
-.si{flex:1;border:none;outline:none;font-size:1.1rem;font-family:inherit;color:var(--dk)}
-.sc{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--gr)}
-.sr{max-height:420px;overflow-y:auto;padding:.5rem 0}
-.sri{padding:.9rem 1.25rem;cursor:pointer;border-bottom:1px solid var(--gl);transition:background .15s}
-.sri:hover{background:#f0f7ff}
+.sb{background:#fff;border-radius:14px;width:94%;max-width:680px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+.siw{display:flex;align-items:center;padding:.9rem 1.1rem;border-bottom:2px solid var(--gl);gap:.6rem}
+.siw span{font-size:1.2rem}
+.si{flex:1;border:none;outline:none;font-size:1rem;font-family:inherit;color:var(--dk)}
+.sc{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--gr);padding:.25rem;min-width:32px;min-height:32px}
+.sr{max-height:60vh;overflow-y:auto;padding:.4rem 0;-webkit-overflow-scrolling:touch}
+.sri{padding:.8rem 1.1rem;cursor:pointer;border-bottom:1px solid var(--gl);transition:background .15s}
+.sri:active{background:#f0f7ff}
 .sri:last-child{border-bottom:none}
-.rt{font-weight:700;color:var(--p);font-size:.95rem}
-.rs{font-size:.8rem;color:var(--gr);margin-top:2px}
-.rd{font-size:.875rem;color:var(--dk);margin-top:3px}
-.se{padding:2rem;text-align:center;color:var(--gr)}
-/* Container / sections */
-.ctr{max-width:1400px;margin:0 auto;padding:3rem 2rem}
-.section{display:none;animation:fi .4s ease}
+.rt{font-weight:700;color:var(--p);font-size:.92rem}
+.rs{font-size:.75rem;color:var(--gr);margin-top:2px}
+.rd{font-size:.85rem;color:var(--dk);margin-top:3px}
+.se{padding:2rem;text-align:center;color:var(--gr);font-size:.9rem}
+
+/* ─── MAIN CONTENT ─── */
+.ctr{max-width:1400px;margin:0 auto;padding:2rem 1.25rem}
+.section{display:none;animation:fi .35s ease}
 .section.active{display:block}
-@keyframes fi{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.section-title{font-size:2.5rem;font-weight:800;margin-bottom:.5rem}
-.section-desc{font-size:1.1rem;color:var(--gr);margin-bottom:2.5rem}
-/* Categories */
-.category{margin-bottom:3rem}
-.category-title{font-size:1.6rem;font-weight:700;margin-bottom:1.5rem;padding-bottom:.5rem;border-bottom:3px solid var(--p);display:inline-block}
-/* Cards */
-.command-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;margin-bottom:2rem}
-.command-card{background:#fff;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .3s;border:2px solid transparent}
-.command-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,102,204,.15);border-color:var(--p)}
-.command-card h4{font-size:1.05rem;font-weight:700;color:var(--p);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+@keyframes fi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.section-title{font-size:clamp(1.5rem,5vw,2.5rem);font-weight:800;margin-bottom:.4rem;line-height:1.2}
+.section-desc{font-size:.95rem;color:var(--gr);margin-bottom:2rem}
+
+/* ─── CATEGORIES ─── */
+.category{margin-bottom:2.5rem}
+.category-title{font-size:clamp(1.1rem,4vw,1.6rem);font-weight:700;margin-bottom:1.25rem;padding-bottom:.4rem;border-bottom:3px solid var(--p);display:inline-block}
+
+/* ─── CARDS ─── */
+.command-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;margin-bottom:1.5rem}
+.command-card{background:#fff;border-radius:12px;padding:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .3s;border:2px solid transparent}
+.command-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,102,204,.15);border-color:var(--p)}
+.command-card h4{font-size:1rem;font-weight:700;color:var(--p);margin-bottom:.5rem;display:flex;align-items:center;gap:.45rem}
 .command-card h4::before{content:'▸';color:var(--g)}
-.command-card p{color:var(--dk);margin-bottom:.9rem;font-size:.93rem}
-/* Code */
-.code{background:#1e1e1e;color:#d4d4d4;padding:1rem;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:.85rem;overflow-x:auto;border-left:4px solid var(--g);line-height:1.7;white-space:pre}
+.command-card p{color:var(--dk);margin-bottom:.75rem;font-size:.88rem}
+
+/* ─── CODE BLOCKS ─── */
+.code{background:#1e1e1e;color:#d4d4d4;padding:.9rem;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:.8rem;overflow-x:auto;border-left:4px solid var(--g);line-height:1.75;white-space:pre;-webkit-overflow-scrolling:touch}
 code,pre{font-family:Consolas,'Courier New',monospace;white-space:pre}
 .cc{color:#6a9955}.ck{color:#569cd6;font-weight:600}.cs{color:#ce9178}.cf{color:#dcdcaa}
-/* Info boxes */
-.info-box{background:linear-gradient(135deg,#e0f2fe,#dbeafe);padding:1.25rem;border-radius:12px;border-left:4px solid var(--p);margin:1.5rem 0}
-.warning-box{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:1.25rem;border-radius:12px;border-left:4px solid #f59e0b;margin:1.5rem 0}
-.success-box{background:linear-gradient(135deg,#d1fae5,#a7f3d0);padding:1.25rem;border-radius:12px;border-left:4px solid var(--g);margin:1.5rem 0}
-/* Tables */
-.table-container{overflow-x:auto;margin:1.5rem 0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-table{width:100%;border-collapse:collapse;background:#fff}
-th{background:var(--p);color:#fff;padding:1rem;text-align:left;font-weight:600}
-td{padding:.9rem 1rem;border-bottom:1px solid var(--gl)}
+
+/* ─── INFO BOXES ─── */
+.info-box{background:linear-gradient(135deg,#e0f2fe,#dbeafe);padding:1.1rem 1.25rem;border-radius:12px;border-left:4px solid var(--p);margin:1.25rem 0;font-size:.9rem}
+.warning-box{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:1.1rem 1.25rem;border-radius:12px;border-left:4px solid #f59e0b;margin:1.25rem 0;font-size:.9rem}
+.success-box{background:linear-gradient(135deg,#d1fae5,#a7f3d0);padding:1.1rem 1.25rem;border-radius:12px;border-left:4px solid var(--g);margin:1.25rem 0;font-size:.9rem}
+.success-box code,.info-box code,.warning-box code{font-size:.82rem;background:rgba(0,0,0,.07);padding:.1em .35em;border-radius:4px}
+
+/* ─── TABLES ─── */
+.table-container{overflow-x:auto;margin:1.25rem 0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:.88rem}
+th{background:var(--p);color:#fff;padding:.8rem .9rem;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:.75rem .9rem;border-bottom:1px solid var(--gl);vertical-align:top}
 tr:last-child td{border-bottom:none}
 tr:hover{background:var(--bg)}
-/* Footer */
-.footer{background:var(--dk);color:#fff;padding:3rem 2rem;margin-top:4rem;text-align:center}
+
+/* ─── FOOTER ─── */
+.footer{background:var(--dk);color:#fff;padding:2.5rem 1.25rem;margin-top:3rem;text-align:center}
 .fc{max-width:800px;margin:0 auto}
-.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:2rem 0}
-.cc2{background:rgba(255,255,255,.1);padding:1.5rem;border-radius:12px;border:2px solid rgba(255,255,255,.2);transition:all .3s}
-.cc2:hover{background:rgba(255,255,255,.15);transform:translateY(-4px)}
-.cc2 .ico{font-size:2rem;margin-bottom:.5rem}
-.cc2 .lbl{font-size:.875rem;opacity:.8;margin-bottom:.25rem}
-.cc2 .val{font-size:1.1rem;font-weight:600}
-/* Scroll top */
-.stb{position:fixed;bottom:2rem;right:2rem;width:50px;height:50px;background:var(--p);color:#fff;border:none;border-radius:50%;font-size:1.5rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,102,204,.4);transition:all .3s;z-index:1000}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem;margin:1.5rem 0}
+.cc2{background:rgba(255,255,255,.1);padding:1.25rem;border-radius:12px;border:2px solid rgba(255,255,255,.2);transition:all .3s}
+.cc2:hover{background:rgba(255,255,255,.15)}
+.cc2 .ico{font-size:1.75rem;margin-bottom:.4rem}
+.cc2 .lbl{font-size:.8rem;opacity:.8;margin-bottom:.2rem}
+.cc2 .val{font-size:1rem;font-weight:600;word-break:break-all}
+.cc2 .val a{color:#00c896}
+
+/* ─── SCROLL TOP ─── */
+.stb{position:fixed;bottom:1.5rem;right:1.25rem;width:46px;height:46px;background:var(--p);color:#fff;border:none;border-radius:50%;font-size:1.4rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,102,204,.45);transition:all .3s;z-index:1000}
 .stb.vis{display:flex}
-.stb:hover{background:var(--pd);transform:translateY(-4px)}
-/* Mobile */
+.stb:hover{background:var(--pd);transform:translateY(-3px)}
+
+/* ════════════════════════════════════
+   MOBILE OVERRIDES  ≤ 768px
+════════════════════════════════════ */
 @media(max-width:768px){
-  .hdr h1{font-size:1.75rem}.hdr{padding:2rem 1rem}
+
+  /* Header */
+  .hdr{padding:1.75rem 1rem 1.5rem}
+
+  /* Nav: hamburger drawer */
   .burger{display:flex}
-  .nav{display:none;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.15);border-top:2px solid var(--p);z-index:999}
+  .nav{
+    display:none;
+    flex-direction:column;
+    position:absolute;
+    top:100%;left:0;right:0;
+    background:#fff;
+    box-shadow:0 8px 28px rgba(0,0,0,.18);
+    border-top:2px solid var(--p);
+    z-index:999;
+    max-height:80vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
   .nav.open{display:flex}
-  .ni{min-width:auto;text-align:left;padding:1rem 1.5rem;border-bottom:1px solid var(--gl);border-left:4px solid transparent;font-size:1rem}
-  .ni:hover,.ni.active{background:var(--p);color:#fff;border-left-color:var(--a)}
-  .command-grid{grid-template-columns:1fr}
-  .section-title{font-size:1.75rem}.category-title{font-size:1.3rem}
-  .ctr{padding:1.5rem 1rem}.cg{grid-template-columns:1fr}
+  .ni{
+    min-width:auto;
+    text-align:left;
+    padding:.95rem 1.25rem;
+    border-bottom:1px solid var(--gl);
+    border-left:4px solid transparent;
+    border-right:none;
+    font-size:.95rem;
+  }
+  .ni:hover,.ni.active{
+    background:var(--p);color:#fff;
+    border-left-color:var(--a);
+    border-bottom:1px solid rgba(255,255,255,.15);
+  }
+
+  /* Content */
+  .ctr{padding:1.25rem .9rem}
+
+  /* Cards: single column on phones */
+  .command-grid{grid-template-columns:1fr;gap:1rem}
+
+  /* Span-2 cards become full width */
+  .command-card[style*="span 2"]{grid-column:span 1 !important}
+
+  /* Code blocks: slightly smaller, still scrollable */
+  .code{font-size:.75rem;padding:.75rem;line-height:1.7}
+
+  /* Tables: allow horizontal scroll, min column widths */
+  .table-container{border-radius:8px}
+  th,td{padding:.65rem .75rem;font-size:.82rem}
+
+  /* Info boxes */
+  .info-box,.warning-box,.success-box{padding:.9rem 1rem;font-size:.85rem}
+
+  /* Section title */
+  .section-title{font-size:1.5rem}
+  .category-title{font-size:1.1rem}
+  .section-desc{font-size:.88rem;margin-bottom:1.5rem}
+
+  /* Footer */
+  .footer{padding:2rem .9rem}
+  .cg{grid-template-columns:1fr;gap:1rem}
+  .cc2 .val{font-size:.95rem}
+
+  /* Scroll-to-top: slightly smaller */
+  .stb{width:42px;height:42px;font-size:1.2rem;bottom:1.25rem;right:1rem}
+
+  /* Search overlay */
+  .so{padding-top:0;align-items:flex-end}
+  .sb{width:100%;border-radius:16px 16px 0 0;max-height:90vh}
+  .sr{max-height:55vh}
+  .siw{padding:.85rem 1rem}
+  .si{font-size:.95rem}
+  .sri{padding:.75rem 1rem}
+}
+
+/* ════════════════════════════════════
+   SMALL PHONES  ≤ 400px
+════════════════════════════════════ */
+@media(max-width:400px){
+  .hdr h1{font-size:1.25rem}
+  .code{font-size:.72rem}
+  th,td{padding:.55rem .6rem;font-size:.78rem}
 }
 </style>
 </head>
@@ -106,29 +201,29 @@ tr:hover{background:var(--bg)}
 
 <div class="hdr">
   <h1>Stata Statistical Analysis Guide</h1>
-  <p style="font-size:1.5rem;font-weight:700;margin:1rem 0">Monu Prajapati</p>
+  <p style="font-size:1.25rem;font-weight:700;margin:.75rem 0">Monu Prajapati</p>
   <p class="sub">Statistician | Biostatistician</p>
-  <p style="font-size:1rem;margin-top:1.5rem;opacity:0.95;line-height:1.6">This guide provides commonly used Stata statistical commands in one place to support students, researchers, and academic learning.</p>
+  <p style="font-size:.9rem;margin-top:1.25rem;opacity:0.92;line-height:1.6;max-width:600px;margin-left:auto;margin-right:auto">This guide provides commonly used Stata statistical commands in one place to support students, researchers, and academic learning.</p>
 </div>
 
 <div class="nav-wrap">
   <div class="nav-inner">
-    <button class="burger" id="burger"><span></span><span></span><span></span></button>
+    <button class="burger" id="burger" aria-label="Open navigation"><span></span><span></span><span></span></button>
     <nav class="nav" id="mainNav">
       <div class="ni active" data-s="basics">🚀 Basics</div>
-      <div class="ni" data-s="datamanagement">🗄️ Data Management</div>
-      <div class="ni" data-s="tests">🧪 Statistical Tests</div>
-      <div class="ni" data-s="regression">📈 Regression &amp; Modeling</div>
+      <div class="ni" data-s="datamanagement">🗄️ Data Mgmt</div>
+      <div class="ni" data-s="tests">🧪 Tests</div>
+      <div class="ni" data-s="regression">📈 Regression</div>
       <div class="ni" data-s="visualization">📊 Visualization</div>
       <div class="ni" data-s="reference">📖 Reference</div>
     </nav>
-    <button class="sbtn" id="sBtn" title="Search (Ctrl+K)">🔍</button>
+    <button class="sbtn" id="sBtn" title="Search (Ctrl+K)" aria-label="Search">🔍</button>
   </div>
 </div>
 
-<div class="so" id="sOverlay">
+<div class="so" id="sOverlay" role="dialog" aria-modal="true" aria-label="Search">
   <div class="sb">
-    <div class="siw"><span>🔍</span><input class="si" id="sInput" type="text" placeholder="Search commands… (Ctrl+K)" autocomplete="off"/><button class="sc" id="sClose">✕</button></div>
+    <div class="siw"><span>🔍</span><input class="si" id="sInput" type="text" placeholder="Search commands…" autocomplete="off" inputmode="search"/><button class="sc" id="sClose" aria-label="Close search">✕</button></div>
     <div class="sr" id="sResults"><div class="se">Start typing to search…</div></div>
   </div>
 </div>
@@ -187,6 +282,7 @@ tr:hover{background:var(--bg)}
 </div>
 </div>
 </section>
+
 <section id="datamanagement" class="section"><h2 class="section-title">🗄️ Data Management</h2><p class="section-desc">Explore, clean, transform, merge, reshape, and automate your data workflows</p>
 <div class="category"><h3 class="category-title">Explore Data</h3>
 <div class="command-grid">
@@ -308,6 +404,7 @@ tr:hover{background:var(--bg)}
 </div>
 </div>
 </section>
+
 <section id="tests" class="section"><h2 class="section-title">🧪 Statistical Tests</h2><p class="section-desc">Hypothesis testing, ANOVA, correlation, non-parametric, survival, meta-analysis, and biostatistics</p>
 <div class="category"><h3 class="category-title">Descriptive &amp; Tables</h3>
 <div class="command-grid">
@@ -401,10 +498,10 @@ tr:hover{background:var(--bg)}
 <span class="ck">swilk</span> resid</div></div>
 <div class="command-card"><h4>Breusch-Pagan</h4><p>Heteroskedasticity</p><div class="code"><span class="ck">regress</span> price mpg weight
 <span class="ck">estat hettest</span>
-<span class="cc">* p < 0.05 = heteroskedasticity</span></div></div>
+<span class="cc">* p &lt; 0.05 = heteroskedasticity</span></div></div>
 <div class="command-card"><h4>VIF — Multicollinearity</h4><p>Variance inflation factors</p><div class="code"><span class="ck">regress</span> price mpg weight foreign
 <span class="ck">estat vif</span>
-<span class="cc">* VIF > 10 = high multicollinearity</span></div></div>
+<span class="cc">* VIF &gt; 10 = high multicollinearity</span></div></div>
 <div class="command-card"><h4>Durbin-Watson</h4><p>Autocorrelation in residuals</p><div class="code"><span class="ck">tsset</span> time
 <span class="ck">regress</span> y x
 <span class="ck">estat dwatson</span>
@@ -413,7 +510,7 @@ tr:hover{background:var(--bg)}
 <span class="ck">robvar</span> mpg, by(foreign)</div></div>
 <div class="command-card"><h4>Ramsey RESET</h4><p>Functional form / omitted variables</p><div class="code"><span class="ck">regress</span> price mpg weight
 <span class="ck">estat ovtest</span>
-<span class="cc">* p < 0.05 = misspecification</span></div></div>
+<span class="cc">* p &lt; 0.05 = misspecification</span></div></div>
 </div>
 </div>
 <div class="category"><h3 class="category-title">⏱️ Survival Analysis</h3>
@@ -483,6 +580,7 @@ tr:hover{background:var(--bg)}
 </div>
 </div>
 </section>
+
 <section id="regression" class="section"><h2 class="section-title">📈 Regression &amp; Modeling</h2><p class="section-desc">Linear, binary, count, panel, survival, time series, and multivariate models</p>
 <div class="category"><h3 class="category-title">Linear Regression</h3>
 <div class="command-grid">
@@ -591,6 +689,7 @@ tr:hover{background:var(--bg)}
 </div>
 </div>
 </section>
+
 <section id="visualization" class="section"><h2 class="section-title">📊 Data Visualization</h2><p class="section-desc">Create publication-quality graphs and charts in Stata</p>
 <div class="category"><h3 class="category-title">Basic Plots</h3>
 <div class="command-grid">
@@ -652,10 +751,11 @@ tr:hover{background:var(--bg)}
 </div>
 </div>
 </section>
+
 <section id="reference" class="section"><h2 class="section-title">📖 Quick Reference</h2><p class="section-desc">Operators, functions, special variables, missing values, and useful packages</p>
 <div class="category"><h3 class="category-title">Operators</h3>
 <div class="table-container"><table>
-<tr><th>Type</th><th>Operator</th><th>Description</th><th>Example</th></tr>
+<tr><th>Type</th><th>Op</th><th>Description</th><th>Example</th></tr>
 <tr><td rowspan="5"><strong>Arithmetic</strong></td><td><code>+</code></td><td>Addition</td><td><code>gen total = x + y</code></td></tr>
 <tr><td><code>-</code></td><td>Subtraction</td><td><code>gen diff = x - y</code></td></tr>
 <tr><td><code>*</code></td><td>Multiplication</td><td><code>gen prod = x * y</code></td></tr>
@@ -678,8 +778,8 @@ tr:hover{background:var(--bg)}
 <tr><td><code>round()</code></td><td>Round to integer</td><td><code>gen r = round(price)</code></td></tr>
 <tr><td><code>int()</code></td><td>Integer part</td><td><code>gen i = int(price)</code></td></tr>
 <tr><td><code>mod()</code></td><td>Modulus / remainder</td><td><code>gen rem = mod(x,5)</code></td></tr>
-<tr><td><code>max()</code></td><td>Maximum of arguments</td><td><code>gen m = max(x,y,z)</code></td></tr>
-<tr><td><code>min()</code></td><td>Minimum of arguments</td><td><code>gen m = min(x,y,z)</code></td></tr>
+<tr><td><code>max()</code></td><td>Maximum of args</td><td><code>gen m = max(x,y,z)</code></td></tr>
+<tr><td><code>min()</code></td><td>Minimum of args</td><td><code>gen m = min(x,y,z)</code></td></tr>
 </table></div></div>
 <div class="category"><h3 class="category-title">Special Variables</h3>
 <div class="command-grid">
@@ -711,168 +811,23 @@ tr:hover{background:var(--bg)}
 </div>
 </div>
 </section>
-
-<section id="examples" class="section"><h2 class="section-title">📚 Complete Workflow Examples</h2><p class="section-desc">Real-world analysis workflows from data loading to results export</p>
-
-<div class="success-box"><strong>💡 Professional Tip:</strong> These complete examples show full workflows, not just isolated commands. This is essential for real research projects.</div>
-
-<div class="category"><h3 class="category-title">Linear Regression Workflow</h3>
-<div class="command-grid">
-<div class="command-card" style="grid-column: span 2;"><h4>Complete Linear Regression Example</h4><p>Full workflow from data exploration to diagnostics</p><div class="code"><span class="cc">* Load example dataset</span>
-<span class="ck">sysuse</span> auto, clear
-
-<span class="cc">* Explore data</span>
-<span class="ck">describe</span>
-<span class="ck">summarize</span> price mpg weight
-
-<span class="cc">* Visualize relationship</span>
-<span class="ck">scatter</span> price mpg
-
-<span class="cc">* Fit regression model</span>
-<span class="ck">regress</span> price mpg weight
-
-<span class="cc">* Check multicollinearity</span>
-<span class="ck">estat vif</span>
-
-<span class="cc">* Check heteroskedasticity</span>
-<span class="ck">estat hettest</span>
-
-<span class="cc">* Predict fitted values</span>
-<span class="ck">predict</span> price_hat
-
-<span class="cc">* Plot fitted vs actual</span>
-<span class="ck">scatter</span> price price_hat
-
-<span class="cc">* Save dataset</span>
-<span class="ck">save</span> auto_analysis.dta, replace</div></div>
 </div>
-</div>
-
-<div class="category"><h3 class="category-title">Logistic Regression Workflow</h3>
-<div class="command-grid">
-<div class="command-card" style="grid-column: span 2;"><h4>Complete Logistic Regression Example</h4><p>Binary outcome analysis with diagnostics</p><div class="code"><span class="ck">sysuse</span> auto, clear
-
-<span class="cc">* Fit logistic model</span>
-<span class="ck">logistic</span> foreign mpg weight
-
-<span class="cc">* Show odds ratios</span>
-<span class="ck">logistic</span> foreign mpg weight, or
-
-<span class="cc">* Predict probability</span>
-<span class="ck">predict</span> prob, pr
-
-<span class="cc">* ROC curve</span>
-<span class="ck">lroc</span>
-
-<span class="cc">* Classification accuracy</span>
-<span class="ck">estat classification</span></div></div>
-</div>
-</div>
-
-<div class="category"><h3 class="category-title">Survival Analysis Workflow</h3>
-<div class="command-grid">
-<div class="command-card" style="grid-column: span 2;"><h4>Complete Cox Survival Example</h4><p>Time-to-event analysis with diagnostics</p><div class="code"><span class="ck">sysuse</span> cancer, clear
-
-<span class="cc">* Declare survival data</span>
-<span class="ck">stset</span> studytime, failure(died)
-
-<span class="cc">* Kaplan-Meier curve</span>
-<span class="ck">sts graph</span>
-
-<span class="cc">* Cox regression</span>
-<span class="ck">stcox</span> drug age
-
-<span class="cc">* Test proportional hazards</span>
-<span class="ck">estat phtest</span></div></div>
-</div>
-</div>
-
-<div class="category"><h3 class="category-title">Professional Do-File Template</h3>
-<div class="command-grid">
-<div class="command-card" style="grid-column: span 2;"><h4>Production-Ready Do-File Structure</h4><p>Industry-standard template for reproducible research</p><div class="code"><span class="cc">*************************************************</span>
-<span class="cc">* Project: Analysis Name</span>
-<span class="cc">* Author: Monu Prajapati</span>
-<span class="cc">* Date: 2026</span>
-<span class="cc">*************************************************</span>
-
-<span class="ck">version</span> 18
-<span class="ck">clear all</span>
-<span class="ck">set more off</span>
-
-<span class="cc">* Start log</span>
-<span class="ck">log using</span> <span class="cs">"analysis.log"</span>, replace
-
-<span class="cc">* Load data</span>
-<span class="ck">use</span> <span class="cs">"data.dta"</span>, clear
-
-<span class="cc">* Analysis code here</span>
-
-<span class="cc">* Save results</span>
-<span class="ck">save</span> <span class="cs">"data_final.dta"</span>, replace
-
-<span class="cc">* Close log</span>
-<span class="ck">log close</span>
-<span class="cc">*************************************************</span></div></div>
-</div>
-</div>
-
-<div class="category"><h3 class="category-title">Regression Diagnostics</h3>
-<div class="command-grid">
-<div class="command-card"><h4>Residual Analysis</h4><p>Check regression assumptions</p><div class="code"><span class="cc">* Residual plot</span>
-<span class="ck">rvfplot</span>
-
-<span class="cc">* Normality test</span>
-<span class="ck">predict</span> resid, residuals
-<span class="ck">swilk</span> resid</div></div>
-<div class="command-card"><h4>Model Specification</h4><p>Test for omitted variables</p><div class="code"><span class="cc">* Specification test</span>
-<span class="ck">estat ovtest</span>
-
-<span class="cc">* Influence statistics</span>
-<span class="ck">predict</span> cooksd, cooksd</div></div>
-</div>
-</div>
-
-<div class="category"><h3 class="category-title">Missing Data & Export</h3>
-<div class="command-grid">
-<div class="command-card"><h4>Missing Data Handling</h4><p>Identify and handle missing values</p><div class="code"><span class="cc">* Summary of missing data</span>
-<span class="ck">misstable summarize</span>
-
-<span class="cc">* Drop missing observations</span>
-<span class="ck">drop if</span> missing(price)
-
-<span class="cc">* Impute with mean</span>
-<span class="ck">summarize</span> price
-<span class="ck">replace</span> price = r(mean) <span class="ck">if</span> missing(price)</div></div>
-<div class="command-card"><h4>Export Results</h4><p>Save tables and data</p><div class="code"><span class="cc">* Export regression table</span>
-<span class="ck">ssc install</span> outreg2
-<span class="ck">outreg2 using</span> results.doc, replace
-
-<span class="cc">* Export dataset</span>
-<span class="ck">export excel using</span> data.xlsx, replace
-
-<span class="cc">* Export graph</span>
-<span class="ck">graph export</span> plot.png, replace</div></div>
-</div>
-</div>
-
-</section>
-</div><!-- /ctr -->
 
 <div class="footer">
   <div class="fc">
     <h3>📞 Contact</h3>
-    <p style="font-size:1.25rem;margin:1rem 0"><strong>Monu Prajapati</strong></p>
-    <p style="opacity:.9;margin-bottom:2rem">Statistician | Biostatistician</p>
+    <p style="font-size:1.15rem;margin:.75rem 0"><strong>Monu Prajapati</strong></p>
+    <p style="opacity:.9;margin-bottom:1.5rem">Statistician | Biostatistician</p>
     <div class="cg">
       <div class="cc2"><div class="ico">📱</div><div class="lbl">Mobile</div><div class="val">+91 7433863551</div></div>
       <div class="cc2"><div class="ico">✉️</div><div class="lbl">Email</div><div class="val"><a href="mailto:prajpapatimonu@gmail.com">prajpapatimonu@gmail.com</a></div></div>
     </div>
-    <p style="margin-top:2rem;opacity:.7">© 2026 Monu Prajapati. All rights reserved.</p>
-    <p style="opacity:.5;font-size:.875rem;margin-top:.5rem">Stata is a registered trademark of StataCorp LLC. This guide is for educational purposes only. | <a href="https://www.stata.com" target="_blank" style="color:#00c896">stata.com</a></p>
+    <p style="margin-top:1.5rem;opacity:.7;font-size:.875rem">© 2026 Monu Prajapati. All rights reserved.</p>
+    <p style="opacity:.5;font-size:.8rem;margin-top:.4rem">Stata is a registered trademark of StataCorp LLC. This guide is for educational purposes only. | <a href="https://www.stata.com" target="_blank" style="color:#00c896">stata.com</a></p>
   </div>
 </div>
 
-<button class="stb" id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<button class="stb" id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">↑</button>
 
 <script>
 // Nav
@@ -911,7 +866,7 @@ document.querySelectorAll('.command-card').forEach(function(card){
   var sn=sec&&sec.querySelector('.section-title')?sec.querySelector('.section-title').innerText:sid;
   if(h)idx.push({h:h,d:d,co:co,sid:sid,sn:sn,card:card});
 });
-function openS(){sOverlay.classList.add('open');sInput.value='';sResults.innerHTML='<div class="se">Start typing to search…</div>';setTimeout(function(){sInput.focus();},50);}
+function openS(){sOverlay.classList.add('open');sInput.value='';sResults.innerHTML='<div class="se">Start typing to search…</div>';setTimeout(function(){sInput.focus();},80);}
 function closeS(){sOverlay.classList.remove('open');}
 sBtn.addEventListener('click',openS);
 sClose.addEventListener('click',closeS);
