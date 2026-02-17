@@ -6,224 +6,157 @@
 <title>Stata Data Analysis Guide – Monu Prajapati</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--p:#0066cc;--pd:#004d99;--g:#00c896;--a:#ff6b35;--dk:#1a1a2e;--gr:#94a3b8;--gl:#e2e8f0;--bg:#f8fafc}
+:root{--p:#0066cc;--pd:#004d99;--g:#00c896;--a:#ff6b35;--dk:#1a1a2e;--gr:#94a3b8;--gl:#e2e8f0;--bg:#f8fafc;--theory:#f0f9ff;--assume:#fefce8;--when:#f0fdf4}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',sans-serif;line-height:1.6;color:var(--dk);background:var(--bg)}
-
-/* ─── HEADER ─── */
-.hdr{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;padding:2.5rem 1.25rem 2rem;text-align:center}
-.hdr h1{font-size:clamp(1.4rem,5vw,2.75rem);font-weight:700;margin-bottom:.75rem;letter-spacing:-0.3px;line-height:1.25}
-.hdr .sub{font-size:clamp(.9rem,3vw,1.25rem);opacity:.95}
-
-/* ─── STICKY NAV ─── */
-.nav-wrap{position:sticky;top:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:100;border-bottom:3px solid var(--p)}
-.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:stretch}
-
-/* hamburger */
-.burger{display:none;background:none;border:none;cursor:pointer;padding:.9rem 1.1rem;flex-direction:column;gap:5px;flex-shrink:0;align-self:stretch}
-.burger span{display:block;width:22px;height:2.5px;background:var(--dk);border-radius:2px;transition:all .3s}
+/* Header */
+.hdr{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;padding:3.5rem 2rem;text-align:center}
+.hdr h1{font-size:2.75rem;font-weight:700;margin-bottom:1rem;letter-spacing:-0.5px}
+.hdr .sub{font-size:1.25rem;opacity:.95;margin-bottom:0}
+.badge{display:inline-block;background:rgba(255,255,255,.2);padding:.75rem 1.5rem;border-radius:50px;font-weight:600;border:2px solid rgba(255,255,255,.3)}
+/* Nav */
+.nav-wrap{position:sticky;top:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:100;border-bottom:3px solid var(--p)}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;position:relative}
+.burger{display:none;background:none;border:none;cursor:pointer;padding:1rem 1.25rem;flex-direction:column;gap:5px;flex-shrink:0}
+.burger span{display:block;width:24px;height:2.5px;background:var(--dk);border-radius:2px;transition:all .3s}
 .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .burger.open span:nth-child(2){opacity:0}
 .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-
-/* desktop nav */
-.nav{display:flex;flex:1;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.nav::-webkit-scrollbar{display:none}
-.ni{flex:1;min-width:110px;padding:1rem .6rem;color:var(--dk);font-weight:600;text-align:center;border-bottom:3px solid transparent;transition:all .25s;white-space:nowrap;cursor:pointer;user-select:none;font-size:.82rem;border-bottom:3px solid transparent}
+.nav{display:flex;flex:1;overflow-x:auto}
+.ni{flex:1;min-width:120px;padding:1.1rem .8rem;color:var(--dk);font-weight:600;text-align:center;border-bottom:3px solid transparent;transition:all .3s;white-space:nowrap;cursor:pointer;user-select:none;font-size:.86rem}
 .ni:hover,.ni.active{background:var(--p);color:#fff;border-bottom-color:var(--a)}
-
-.sbtn{background:var(--p);border:none;color:#fff;font-size:1.15rem;padding:0 1rem;cursor:pointer;min-height:48px;min-width:48px;transition:background .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.sbtn{background:var(--p);border:none;color:#fff;font-size:1.2rem;padding:0 1.2rem;cursor:pointer;min-height:52px;transition:background .2s;flex-shrink:0}
 .sbtn:hover{background:var(--pd)}
-
-/* ─── SEARCH OVERLAY ─── */
-.so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;align-items:flex-start;justify-content:center;padding-top:60px}
+/* Search overlay */
+.so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:flex-start;justify-content:center;padding-top:80px}
 .so.open{display:flex}
-.sb{background:#fff;border-radius:14px;width:94%;max-width:680px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
-.siw{display:flex;align-items:center;padding:.9rem 1.1rem;border-bottom:2px solid var(--gl);gap:.6rem}
-.siw span{font-size:1.2rem}
-.si{flex:1;border:none;outline:none;font-size:1rem;font-family:inherit;color:var(--dk)}
-.sc{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--gr);padding:.25rem;min-width:32px;min-height:32px}
-.sr{max-height:60vh;overflow-y:auto;padding:.4rem 0;-webkit-overflow-scrolling:touch}
-.sri{padding:.8rem 1.1rem;cursor:pointer;border-bottom:1px solid var(--gl);transition:background .15s}
-.sri:active{background:#f0f7ff}
+.sb{background:#fff;border-radius:16px;width:90%;max-width:680px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+.siw{display:flex;align-items:center;padding:1rem 1.25rem;border-bottom:2px solid var(--gl);gap:.75rem}
+.siw span{font-size:1.3rem}
+.si{flex:1;border:none;outline:none;font-size:1.1rem;font-family:inherit;color:var(--dk)}
+.sc{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--gr)}
+.sr{max-height:420px;overflow-y:auto;padding:.5rem 0}
+.sri{padding:.9rem 1.25rem;cursor:pointer;border-bottom:1px solid var(--gl);transition:background .15s}
+.sri:hover{background:#f0f7ff}
 .sri:last-child{border-bottom:none}
-.rt{font-weight:700;color:var(--p);font-size:.92rem}
-.rs{font-size:.75rem;color:var(--gr);margin-top:2px}
-.rd{font-size:.85rem;color:var(--dk);margin-top:3px}
-.se{padding:2rem;text-align:center;color:var(--gr);font-size:.9rem}
-
-/* ─── MAIN CONTENT ─── */
-.ctr{max-width:1400px;margin:0 auto;padding:2rem 1.25rem}
-.section{display:none;animation:fi .35s ease}
+.rt{font-weight:700;color:var(--p);font-size:.95rem}
+.rs{font-size:.8rem;color:var(--gr);margin-top:2px}
+.rd{font-size:.875rem;color:var(--dk);margin-top:3px}
+.se{padding:2rem;text-align:center;color:var(--gr)}
+/* Container / sections */
+.ctr{max-width:1400px;margin:0 auto;padding:3rem 2rem}
+.section{display:none;animation:fi .4s ease}
 .section.active{display:block}
-@keyframes fi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.section-title{font-size:clamp(1.5rem,5vw,2.5rem);font-weight:800;margin-bottom:.4rem;line-height:1.2}
-.section-desc{font-size:.95rem;color:var(--gr);margin-bottom:2rem}
-
-/* ─── CATEGORIES ─── */
-.category{margin-bottom:2.5rem}
-.category-title{font-size:clamp(1.1rem,4vw,1.6rem);font-weight:700;margin-bottom:1.25rem;padding-bottom:.4rem;border-bottom:3px solid var(--p);display:inline-block}
-
-/* ─── CARDS ─── */
-.command-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;margin-bottom:1.5rem}
-.command-card{background:#fff;border-radius:12px;padding:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .3s;border:2px solid transparent}
-.command-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,102,204,.15);border-color:var(--p)}
-.command-card h4{font-size:1rem;font-weight:700;color:var(--p);margin-bottom:.5rem;display:flex;align-items:center;gap:.45rem}
+@keyframes fi{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.section-title{font-size:2.5rem;font-weight:800;margin-bottom:.5rem}
+.section-desc{font-size:1.1rem;color:var(--gr);margin-bottom:2.5rem}
+/* Categories */
+.category{margin-bottom:3rem}
+.category-title{font-size:1.6rem;font-weight:700;margin-bottom:1.5rem;padding-bottom:.5rem;border-bottom:3px solid var(--p);display:inline-block}
+/* Cards */
+.command-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;margin-bottom:2rem}
+.command-card{background:#fff;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .3s;border:2px solid transparent}
+.command-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,102,204,.15);border-color:var(--p)}
+.command-card h4{font-size:1.05rem;font-weight:700;color:var(--p);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
 .command-card h4::before{content:'▸';color:var(--g)}
-.command-card p{color:var(--dk);margin-bottom:.75rem;font-size:.88rem}
-
-/* ─── CODE BLOCKS ─── */
-.code{background:#1e1e1e;color:#d4d4d4;padding:.9rem;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:.8rem;overflow-x:auto;border-left:4px solid var(--g);line-height:1.75;white-space:pre;-webkit-overflow-scrolling:touch}
+.command-card p{color:var(--dk);margin-bottom:.9rem;font-size:.93rem}
+/* Code */
+.code{background:#1e1e1e;color:#d4d4d4;padding:1rem;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:.85rem;overflow-x:auto;border-left:4px solid var(--g);line-height:1.7;white-space:pre}
 code,pre{font-family:Consolas,'Courier New',monospace;white-space:pre}
 .cc{color:#6a9955}.ck{color:#569cd6;font-weight:600}.cs{color:#ce9178}.cf{color:#dcdcaa}
-
-/* ─── INFO BOXES ─── */
-.info-box{background:linear-gradient(135deg,#e0f2fe,#dbeafe);padding:1.1rem 1.25rem;border-radius:12px;border-left:4px solid var(--p);margin:1.25rem 0;font-size:.9rem}
-.warning-box{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:1.1rem 1.25rem;border-radius:12px;border-left:4px solid #f59e0b;margin:1.25rem 0;font-size:.9rem}
-.success-box{background:linear-gradient(135deg,#d1fae5,#a7f3d0);padding:1.1rem 1.25rem;border-radius:12px;border-left:4px solid var(--g);margin:1.25rem 0;font-size:.9rem}
-.success-box code,.info-box code,.warning-box code{font-size:.82rem;background:rgba(0,0,0,.07);padding:.1em .35em;border-radius:4px}
-
-/* ─── TABLES ─── */
-.table-container{overflow-x:auto;margin:1.25rem 0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;background:#fff;font-size:.88rem}
-th{background:var(--p);color:#fff;padding:.8rem .9rem;text-align:left;font-weight:600;white-space:nowrap}
-td{padding:.75rem .9rem;border-bottom:1px solid var(--gl);vertical-align:top}
+/* Info boxes */
+.info-box{background:linear-gradient(135deg,#e0f2fe,#dbeafe);padding:1.25rem;border-radius:12px;border-left:4px solid var(--p);margin:1.5rem 0}
+.warning-box{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:1.25rem;border-radius:12px;border-left:4px solid #f59e0b;margin:1.5rem 0}
+.success-box{background:linear-gradient(135deg,#d1fae5,#a7f3d0);padding:1.25rem;border-radius:12px;border-left:4px solid var(--g);margin:1.5rem 0}
+/* NEW: Theory, Assumptions, When-to-use boxes */
+.theory-box{background:linear-gradient(135deg,var(--theory),#e0f2fe);padding:1.25rem;border-radius:12px;border-left:4px solid #0369a1;margin:1.5rem 0}
+.theory-box h4{color:#0369a1;font-size:1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.theory-box h4::before{content:'📚'}
+.assumptions-box{background:linear-gradient(135deg,var(--assume),#fef9c3);padding:1.25rem;border-radius:12px;border-left:4px solid #ca8a04;margin:1.5rem 0}
+.assumptions-box h4{color:#854d0e;font-size:1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.assumptions-box h4::before{content:'✓'}
+.assumptions-box ul{margin-left:1.5rem;margin-top:.5rem}
+.assumptions-box li{margin-bottom:.3rem}
+.when-box{background:linear-gradient(135deg,var(--when),#dcfce7);padding:1.25rem;border-radius:12px;border-left:4px solid #16a34a;margin:1.5rem 0}
+.when-box h4{color:#166534;font-size:1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.when-box h4::before{content:'🎯'}
+/* Test selection flowchart */
+.flowchart-container{background:#fff;border-radius:16px;padding:2rem;margin:1.5rem 0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.flow-step{display:flex;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.flow-box{background:var(--p);color:#fff;padding:.75rem 1.25rem;border-radius:8px;font-weight:600;font-size:.9rem}
+.flow-box.secondary{background:var(--g)}
+.flow-box.tertiary{background:#7c3aed}
+.flow-box.decision{background:var(--a)}
+.flow-arrow{color:var(--gr);font-size:1.5rem}
+.flow-or{background:var(--gl);padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:600;color:var(--dk)}
+/* Tables */
+.table-container{overflow-x:auto;margin:1.5rem 0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+table{width:100%;border-collapse:collapse;background:#fff}
+th{background:var(--p);color:#fff;padding:1rem;text-align:left;font-weight:600}
+td{padding:.9rem 1rem;border-bottom:1px solid var(--gl)}
 tr:last-child td{border-bottom:none}
 tr:hover{background:var(--bg)}
-
-/* ─── FOOTER ─── */
-.footer{background:var(--dk);color:#fff;padding:2.5rem 1.25rem;margin-top:3rem;text-align:center}
+/* Decision table */
+.decision-table th{background:var(--pd)}
+.decision-table td:first-child{font-weight:600;color:var(--p)}
+/* Footer */
+.footer{background:var(--dk);color:#fff;padding:3rem 2rem;margin-top:4rem;text-align:center}
 .fc{max-width:800px;margin:0 auto}
-.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem;margin:1.5rem 0}
-.cc2{background:rgba(255,255,255,.1);padding:1.25rem;border-radius:12px;border:2px solid rgba(255,255,255,.2);transition:all .3s}
-.cc2:hover{background:rgba(255,255,255,.15)}
-.cc2 .ico{font-size:1.75rem;margin-bottom:.4rem}
-.cc2 .lbl{font-size:.8rem;opacity:.8;margin-bottom:.2rem}
-.cc2 .val{font-size:1rem;font-weight:600;word-break:break-all}
-.cc2 .val a{color:#00c896}
-
-/* ─── SCROLL TOP ─── */
-.stb{position:fixed;bottom:1.5rem;right:1.25rem;width:46px;height:46px;background:var(--p);color:#fff;border:none;border-radius:50%;font-size:1.4rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,102,204,.45);transition:all .3s;z-index:1000}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:2rem 0}
+.cc2{background:rgba(255,255,255,.1);padding:1.5rem;border-radius:12px;border:2px solid rgba(255,255,255,.2);transition:all .3s}
+.cc2:hover{background:rgba(255,255,255,.15);transform:translateY(-4px)}
+.cc2 .ico{font-size:2rem;margin-bottom:.5rem}
+.cc2 .lbl{font-size:.875rem;opacity:.8;margin-bottom:.25rem}
+.cc2 .val{font-size:1.1rem;font-weight:600}
+/* Scroll top */
+.stb{position:fixed;bottom:2rem;right:2rem;width:50px;height:50px;background:var(--p);color:#fff;border:none;border-radius:50%;font-size:1.5rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,102,204,.4);transition:all .3s;z-index:1000}
 .stb.vis{display:flex}
-.stb:hover{background:var(--pd);transform:translateY(-3px)}
-
-/* ════════════════════════════════════
-   MOBILE OVERRIDES  ≤ 768px
-════════════════════════════════════ */
+.stb:hover{background:var(--pd);transform:translateY(-4px)}
+/* Mobile */
 @media(max-width:768px){
-
-  /* Header */
-  .hdr{padding:1.75rem 1rem 1.5rem}
-
-  /* Nav: hamburger drawer */
+  .hdr h1{font-size:1.75rem}.hdr{padding:2rem 1rem}
   .burger{display:flex}
-  .nav{
-    display:none;
-    flex-direction:column;
-    position:absolute;
-    top:100%;left:0;right:0;
-    background:#fff;
-    box-shadow:0 8px 28px rgba(0,0,0,.18);
-    border-top:2px solid var(--p);
-    z-index:999;
-    max-height:80vh;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-  }
+  .nav{display:none;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.15);border-top:2px solid var(--p);z-index:999}
   .nav.open{display:flex}
-  .ni{
-    min-width:auto;
-    text-align:left;
-    padding:.95rem 1.25rem;
-    border-bottom:1px solid var(--gl);
-    border-left:4px solid transparent;
-    border-right:none;
-    font-size:.95rem;
-  }
-  .ni:hover,.ni.active{
-    background:var(--p);color:#fff;
-    border-left-color:var(--a);
-    border-bottom:1px solid rgba(255,255,255,.15);
-  }
-
-  /* Content */
-  .ctr{padding:1.25rem .9rem}
-
-  /* Cards: single column on phones */
-  .command-grid{grid-template-columns:1fr;gap:1rem}
-
-  /* Span-2 cards become full width */
-  .command-card[style*="span 2"]{grid-column:span 1 !important}
-
-  /* Code blocks: slightly smaller, still scrollable */
-  .code{font-size:.75rem;padding:.75rem;line-height:1.7}
-
-  /* Tables: allow horizontal scroll, min column widths */
-  .table-container{border-radius:8px}
-  th,td{padding:.65rem .75rem;font-size:.82rem}
-
-  /* Info boxes */
-  .info-box,.warning-box,.success-box{padding:.9rem 1rem;font-size:.85rem}
-
-  /* Section title */
-  .section-title{font-size:1.5rem}
-  .category-title{font-size:1.1rem}
-  .section-desc{font-size:.88rem;margin-bottom:1.5rem}
-
-  /* Footer */
-  .footer{padding:2rem .9rem}
-  .cg{grid-template-columns:1fr;gap:1rem}
-  .cc2 .val{font-size:.95rem}
-
-  /* Scroll-to-top: slightly smaller */
-  .stb{width:42px;height:42px;font-size:1.2rem;bottom:1.25rem;right:1rem}
-
-  /* Search overlay */
-  .so{padding-top:0;align-items:flex-end}
-  .sb{width:100%;border-radius:16px 16px 0 0;max-height:90vh}
-  .sr{max-height:55vh}
-  .siw{padding:.85rem 1rem}
-  .si{font-size:.95rem}
-  .sri{padding:.75rem 1rem}
-}
-
-/* ════════════════════════════════════
-   SMALL PHONES  ≤ 400px
-════════════════════════════════════ */
-@media(max-width:400px){
-  .hdr h1{font-size:1.25rem}
-  .code{font-size:.72rem}
-  th,td{padding:.55rem .6rem;font-size:.78rem}
+  .ni{min-width:auto;text-align:left;padding:1rem 1.5rem;border-bottom:1px solid var(--gl);border-left:4px solid transparent;font-size:1rem}
+  .ni:hover,.ni.active{background:var(--p);color:#fff;border-left-color:var(--a)}
+  .command-grid{grid-template-columns:1fr}
+  .section-title{font-size:1.75rem}.category-title{font-size:1.3rem}
+  .ctr{padding:1.5rem 1rem}.cg{grid-template-columns:1fr}
+  .flow-step{flex-direction:column;align-items:flex-start}
+  .flow-arrow{transform:rotate(90deg)}
 }
 </style>
+<base target="_blank">
 </head>
 <body>
 
 <div class="hdr">
   <h1>Stata Statistical Analysis Guide</h1>
-  <p style="font-size:1.25rem;font-weight:700;margin:.75rem 0">Monu Prajapati</p>
+  <p style="font-size:1.5rem;font-weight:700;margin:1rem 0">Monu Prajapati</p>
   <p class="sub">Statistician | Biostatistician</p>
-  <p style="font-size:.9rem;margin-top:1.25rem;opacity:0.92;line-height:1.6;max-width:600px;margin-left:auto;margin-right:auto">This guide provides commonly used Stata statistical commands in one place to support students, researchers, and academic learning.</p>
+  <p style="font-size:1rem;margin-top:1.5rem;opacity:0.95;line-height:1.6">A comprehensive guide with theory, assumptions, and systematic test selection for students, researchers, and academic learning.</p>
 </div>
 
 <div class="nav-wrap">
   <div class="nav-inner">
-    <button class="burger" id="burger" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    <button class="burger" id="burger"><span></span><span></span><span></span></button>
     <nav class="nav" id="mainNav">
       <div class="ni active" data-s="basics">🚀 Basics</div>
-      <div class="ni" data-s="datamanagement">🗄️ Data Mgmt</div>
-      <div class="ni" data-s="tests">🧪 Tests</div>
-      <div class="ni" data-s="regression">📈 Regression</div>
+      <div class="ni" data-s="datamanagement">🗄️ Data Management</div>
+      <div class="ni" data-s="testselection">🎯 Test Selection</div>
+      <div class="ni" data-s="tests">🧪 Statistical Tests</div>
+      <div class="ni" data-s="regression">📈 Regression &amp; Modeling</div>
       <div class="ni" data-s="visualization">📊 Visualization</div>
       <div class="ni" data-s="reference">📖 Reference</div>
     </nav>
-    <button class="sbtn" id="sBtn" title="Search (Ctrl+K)" aria-label="Search">🔍</button>
+    <button class="sbtn" id="sBtn" title="Search (Ctrl+K)">🔍</button>
   </div>
 </div>
 
-<div class="so" id="sOverlay" role="dialog" aria-modal="true" aria-label="Search">
+<div class="so" id="sOverlay">
   <div class="sb">
-    <div class="siw"><span>🔍</span><input class="si" id="sInput" type="text" placeholder="Search commands…" autocomplete="off" inputmode="search"/><button class="sc" id="sClose" aria-label="Close search">✕</button></div>
+    <div class="siw"><span>🔍</span><input class="si" id="sInput" type="text" placeholder="Search commands… (Ctrl+K)" autocomplete="off"/><button class="sc" id="sClose">✕</button></div>
     <div class="sr" id="sResults"><div class="se">Start typing to search…</div></div>
   </div>
 </div>
@@ -405,7 +338,111 @@ tr:hover{background:var(--bg)}
 </div>
 </section>
 
-<section id="tests" class="section"><h2 class="section-title">🧪 Statistical Tests</h2><p class="section-desc">Hypothesis testing, ANOVA, correlation, non-parametric, survival, meta-analysis, and biostatistics</p>
+<section id="testselection" class="section"><h2 class="section-title">🎯 Test Selection Framework</h2><p class="section-desc">Systematic guide to choosing the right statistical test for your research question</p>
+
+<div class="theory-box">
+<h4>Why Test Selection Matters</h4>
+<p>Choosing the wrong statistical test can lead to invalid conclusions, wasted resources, and misleading research findings. The correct test depends on your <strong>research question</strong>, <strong>data type</strong>, <strong>sample size</strong>, and whether <strong>assumptions</strong> are met. This framework guides you through the decision process systematically.</p>
+</div>
+
+<div class="category"><h3 class="category-title">Decision Flowchart</h3>
+<div class="flowchart-container">
+<div class="flow-step">
+<div class="flow-box">Start: Research Question</div>
+<span class="flow-arrow">→</span>
+<div class="flow-box decision">What is your outcome variable?</div>
+</div>
+<div class="flow-step">
+<span style="margin-left:2rem"></span>
+<div class="flow-box secondary">Continuous (e.g., height, weight, score)</div>
+<span class="flow-or">OR</span>
+<div class="flow-box tertiary">Categorical (e.g., yes/no, disease status)</div>
+</div>
+<div class="flow-step">
+<span style="margin-left:2rem"></span>
+<span class="flow-arrow">↓</span>
+<span style="width:8rem"></span>
+<span class="flow-arrow">↓</span>
+</div>
+<div class="flow-step">
+<span style="margin-left:1rem"></span>
+<div class="flow-box decision">How many groups?</div>
+<span style="width:4rem"></span>
+<div class="flow-box decision">What type of association?</div>
+</div>
+<div class="flow-step">
+<span style="margin-left:1rem"></span>
+<div style="font-size:.85rem;color:var(--gr)">1 group → One-sample t/z test<br>2 groups → Independent/Paired t test<br>3+ groups → ANOVA</div>
+<span style="width:2rem"></span>
+<div style="font-size:.85rem;color:var(--gr)">2 categories → Chi-square/Fisher's<br>Association → Correlation</div>
+</div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Quick Decision Table</h3>
+<div class="table-container"><table class="decision-table">
+<tr><th>Research Question</th><th>Variable Types</th><th>Test to Use</th><th>Check Assumptions</th></tr>
+<tr><td>Compare mean to known value</td><td>1 continuous</td><td>One-sample t test</td><td>Normality</td></tr>
+<tr><td>Compare means of 2 independent groups</td><td>1 continuous, 1 binary</td><td>Independent t test</td><td>Normality, Equal variances</td></tr>
+<tr><td>Compare means of same group at 2 times</td><td>2 continuous (paired)</td><td>Paired t test</td><td>Normality of differences</td></tr>
+<tr><td>Compare means of 3+ groups</td><td>1 continuous, 1 categorical (3+)</td><td>One-way ANOVA</td><td>Normality, Equal variances, Independence</td></tr>
+<tr><td>Test association between 2 categorical</td><td>2 categorical</td><td>Chi-square test</td><td>Expected counts ≥ 5</td></tr>
+<tr><td>Test linear relationship</td><td>2 continuous</td><td>Pearson correlation</td><td>Normality, Linearity, No outliers</td></tr>
+<tr><td>Predict continuous outcome</td><td>1 continuous outcome, 1+ predictors</td><td>Linear regression</td><td>Linearity, Independence, Normality, Equal variance</td></tr>
+<tr><td>Predict binary outcome</td><td>1 binary outcome, 1+ predictors</td><td>Logistic regression</td><td>Independence, No multicollinearity, Linearity of logit</td></tr>
+</table></div>
+</div>
+
+<div class="category"><h3 class="category-title">Parametric vs Non-Parametric Decision</h3>
+<div class="when-box">
+<h4>When to Use Parametric Tests</h4>
+<p>Parametric tests (t-tests, ANOVA, Pearson correlation) are more powerful BUT require strict assumptions. Use when:</p>
+<ul style="margin-left:1.5rem;margin-top:.5rem">
+<li>Data is approximately normally distributed (check with Shapiro-Wilk)</li>
+<li>Sample size is large (n > 30 per group, by Central Limit Theorem)</li>
+<li>Variances are approximately equal across groups (homoscedasticity)</li>
+<li>Data is measured on interval or ratio scale</li>
+</ul>
+</div>
+<div class="when-box">
+<h4>When to Use Non-Parametric Tests</h4>
+<p>Non-parametric tests make fewer assumptions and are more robust. Use when:</p>
+<ul style="margin-left:1.5rem;margin-top:.5rem">
+<li>Data is clearly non-normal and sample size is small (n < 30)</li>
+<li>Data contains outliers that cannot be removed</li>
+<li>Data is ordinal (ranked) rather than continuous</li>
+<li>Variances are very unequal between groups (heteroscedasticity)</li>
+<li>Sample size is very small</li>
+</ul>
+</div>
+<div class="table-container"><table>
+<tr><th>Parametric Test</th><th>Non-Parametric Alternative</th><th>When to Switch</th></tr>
+<tr><td>Independent t test</td><td>Mann-Whitney U test</td><td>Non-normal data, small n, outliers</td></tr>
+<tr><td>Paired t test</td><td>Wilcoxon Signed-Rank test</td><td>Non-normal differences, ordinal data</td></tr>
+<tr><td>One-way ANOVA</td><td>Kruskal-Wallis test</td><td>Non-normal data, unequal variances</td></tr>
+<tr><td>Repeated Measures ANOVA</td><td>Friedman test</td><td>Non-normal data, small sample</td></tr>
+<tr><td>Pearson correlation</td><td>Spearman/Kendall correlation</td><td>Non-linear relationship, outliers, ordinal data</td></tr>
+<tr><td>Linear regression</td><td>Robust regression, quantile regression</td><td>Non-normal residuals, heteroscedasticity</td></tr>
+</table></div>
+</div>
+
+<div class="category"><h3 class="category-title">Assumption Checking Checklist</h3>
+<div class="assumptions-box">
+<h4>General Assumptions for Most Statistical Tests</h4>
+<ul>
+<li><strong>Independence:</strong> Observations must be independent of each other (no repeated measures on same subject unless using paired tests)</li>
+<li><strong>Random Sampling:</strong> Data should be collected through random sampling from the population</li>
+<li><strong>Adequate Sample Size:</strong> Sufficient power to detect meaningful differences</li>
+</ul>
+</div>
+<div class="info-box">
+<strong>💡 Pro Tip:</strong> Always check assumptions BEFORE running your main analysis. Use diagnostic plots and formal tests to verify assumptions. If assumptions are violated, consider data transformation or non-parametric alternatives.
+</div>
+</div>
+</section>
+
+<section id="tests" class="section"><h2 class="section-title">🧪 Statistical Tests</h2><p class="section-desc">Hypothesis testing with theory, assumptions, and Stata commands</p>
+
 <div class="category"><h3 class="category-title">Descriptive &amp; Tables</h3>
 <div class="command-grid">
 <div class="command-card"><h4>Frequency Table</h4><p>One-way distribution</p><div class="code"><span class="ck">tabulate</span> rep78
@@ -415,7 +452,26 @@ tr:hover{background:var(--bg)}
 <div class="command-card"><h4>By Group Summaries</h4><p>Repeat command by group</p><div class="code"><span class="ck">bysort</span> foreign: <span class="ck">summarize</span> price</div></div>
 </div>
 </div>
-<div class="category"><h3 class="category-title">z Tests</h3><div class="info-box"><strong>💡 Note:</strong> Requires known population standard deviation (σ)</div>
+
+<div class="category"><h3 class="category-title">z Tests</h3>
+<div class="theory-box">
+<h4>Theory: Why Use z Tests?</h4>
+<p>The z test is used to compare a sample mean to a known population mean when the <strong>population standard deviation (σ) is known</strong>. It's based on the standard normal distribution. In practice, z tests are rarely used because σ is almost never known—this is why t tests are more common in real research.</p>
+<p><strong>Note:</strong> z tests are rarely used in clinical and medical research because population standard deviation is almost never known from prior studies. Use t tests instead for most practical applications.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for z Tests</h4>
+<ul>
+<li><strong>Known population standard deviation (σ):</strong> This is the critical requirement that distinguishes z from t tests</li>
+<li><strong>Normality:</strong> Data should be normally distributed, OR sample size n ≥ 30 (Central Limit Theorem)</li>
+<li><strong>Independence:</strong> Observations are independent of each other</li>
+<li><strong>Random sampling:</strong> Data collected through random sampling</li>
+</ul>
+</div>
+<div class="when-box">
+<h4>When to Use z Tests</h4>
+<p>Use z tests when: (1) Population σ is known from prior research or theory, (2) Sample size is large (n > 30), (3) Testing proportions with large samples. In most practical research, use t tests instead since σ is unknown.</p>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>One-Sample z Test</h4><p>Test mean against hypothesised value (known σ)</p><div class="code"><span class="ck">ztest</span> mpg == 21, sd(5)</div></div>
 <div class="command-card"><h4>Two-Sample z Test (Independent Groups)</h4><p>Compare two groups</p><div class="code"><span class="ck">ztest</span> mpg, by(foreign) sd(5)</div></div>
@@ -430,13 +486,51 @@ tr:hover{background:var(--bg)}
 
 <span class="cc">* Two-sample:</span>
 <span class="ck">ztesti</span> 50 80 12 60 75 10</div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Proportion Tests</h3>
+<div class="theory-box">
+<h4>Theory: Why Test Proportions?</h4>
+<p>Proportion tests compare the frequency of a binary outcome (success/failure, yes/no) between groups or against a hypothesized value. These tests are fundamental in epidemiology (disease rates), quality control (defect rates), and survey research (response rates).</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Proportion Tests</h4>
+<ul>
+<li><strong>Binary outcome:</strong> Only two possible outcomes (success/failure)</li>
+<li><strong>Independence:</strong> Observations are independent</li>
+<li><strong>Adequate sample size:</strong> np ≥ 5 and n(1-p) ≥ 5 for normal approximation</li>
+<li><strong>Random sampling:</strong> Data collected through random sampling</li>
+</ul>
+</div>
+<div class="command-grid">
 <div class="command-card"><h4>One-Sample Proportion Test</h4><p>Test proportion against hypothesised value</p><div class="code"><span class="ck">prtest</span> foreign == 0.5</div></div>
 <div class="command-card"><h4>Two-Sample Proportion Test</h4><p>Compare proportions between groups</p><div class="code"><span class="ck">prtest</span> expensive, by(foreign)</div></div>
 <div class="command-card"><h4>Immediate Proportion Test</h4><p>Calculate from summary data</p><div class="code"><span class="ck">prtesti</span> 50 0.4 50 0.6
 <span class="cc">* n₁=50, p₁=0.4, n₂=50, p₂=0.6</span></div></div>
 </div>
 </div>
-<div class="category"><h3 class="category-title">t Tests</h3><div class="info-box"><strong>💡 Note:</strong> Used when population SD is unknown (most common case)</div>
+
+<div class="category"><h3 class="category-title">t Tests</h3>
+<div class="theory-box">
+<h4>Theory: Why Use t Tests?</h4>
+<p>The t test is the most commonly used hypothesis test for comparing means. Unlike the z test, it does NOT require knowing the population standard deviation—instead, it estimates σ from the sample data. The t distribution accounts for this additional uncertainty, especially important with small samples.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for t Tests</h4>
+<ul>
+<li><strong>Normality:</strong> Data should be approximately normally distributed (especially important for n < 30)</li>
+<li><strong>Independence:</strong> Observations are independent of each other</li>
+<li><strong>Equal variances (for independent t test):</strong> Groups should have similar variances (test with sdtest)</li>
+<li><strong>Random sampling:</strong> Data collected through random sampling</li>
+<li><strong>Continuous outcome:</strong> Dependent variable should be continuous (interval/ratio scale)</li>
+</ul>
+</div>
+<div class="when-box">
+<h4>When to Use Each t Test</h4>
+<p><strong>One-sample t test:</strong> Compare sample mean to a known/hypothesized value.<br><strong>Independent t test:</strong> Compare means of two different/unrelated groups.<br><strong>Paired t test:</strong> Compare means from the same group at two time points or matched pairs.</p>
+</div>
+<div class="info-box"><strong>💡 Note:</strong> Used when population SD is unknown (most common case)</div>
 <div class="command-grid">
 <div class="command-card"><h4>One-Sample t Test</h4><p>Test mean against hypothesised value</p><div class="code"><span class="ck">ttest</span> mpg == 21</div></div>
 <div class="command-card"><h4>Independent t Test</h4><p>Compare two independent groups</p><div class="code"><span class="ck">ttest</span> mpg, by(foreign)</div></div>
@@ -446,7 +540,28 @@ tr:hover{background:var(--bg)}
 <span class="ck">ttest</span> mpg, by(foreign) unequal</div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">ANOVA Family</h3>
+<div class="theory-box">
+<h4>Theory: Why Use ANOVA?</h4>
+<p>Analysis of Variance (ANOVA) compares means across three or more groups while controlling the Type I error rate. If you used multiple t-tests instead, you'd inflate your chance of false positives. ANOVA tests whether <em>any</em> group differs, then post-hoc tests identify which specific groups differ.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for ANOVA</h4>
+<ul>
+<li><strong>Normality:</strong> Residuals should be normally distributed (check with Shapiro-Wilk on residuals)</li>
+<li><strong>Homogeneity of variances:</strong> Equal variances across groups (test with Levene's test)</li>
+<li><strong>Independence:</strong> Observations are independent (no repeated measures unless using repeated measures ANOVA)</li>
+<li><strong>Random sampling:</strong> Data collected through random sampling</li>
+<li><strong>Continuous outcome:</strong> Dependent variable should be continuous</li>
+</ul>
+</div>
+<div class="when-box">
+<h4>When to Use Each ANOVA Type</h4>
+<p><strong>One-way ANOVA:</strong> One categorical predictor with 3+ levels.<br><strong>Two-way ANOVA:</strong> Two categorical predictors, tests main effects and interaction.<br><strong>Repeated Measures ANOVA:</strong> Same subjects measured at multiple time points.<br><strong>ANCOVA:</strong> When you need to control for continuous covariates.<br><strong>MANOVA:</strong> When you have multiple correlated outcome variables.</p>
+</div>
+<div class="warning-box"><strong>⚠️ Important:</strong> If ANOVA is significant (p < 0.05), run post-hoc tests (Bonferroni, Tukey) to identify which groups differ. Never run multiple t-tests instead of ANOVA!</div>
+<div class="info-box"><strong>💡 Before Interpreting:</strong> Check normality of residuals (Shapiro-Wilk) and homogeneity of variances (Levene's test) before interpreting ANOVA results.</div>
 <div class="command-grid">
 <div class="command-card"><h4>One-Way ANOVA</h4><p>Compare means — 3+ groups</p><div class="code"><span class="ck">oneway</span> price rep78, bonferroni</div></div>
 <div class="command-card"><h4>Two-Way ANOVA</h4><p>Two categorical factors</p><div class="code"><span class="ck">anova</span> price foreign rep78</div></div>
@@ -463,14 +578,51 @@ tr:hover{background:var(--bg)}
 <div class="command-card"><h4>Mixed ANOVA</h4><p>Between + within subject factors</p><div class="code"><span class="ck">mixed</span> y i.time i.group i.time#i.group || id:, reml</div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">Chi-Square &amp; Association</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Chi-Square?</h4>
+<p>The Chi-Square (χ²) test examines whether two categorical variables are associated (dependent) or independent. It compares observed frequencies in a contingency table to expected frequencies if there were no association. It's widely used in genetics, epidemiology, and survey research.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Chi-Square Test</h4>
+<ul>
+<li><strong>Independence:</strong> Observations are independent (each subject in only one cell)</li>
+<li><strong>Categorical variables:</strong> Both variables must be categorical (nominal or ordinal)</li>
+<li><strong>Adequate expected frequencies:</strong> Expected count ≥ 5 in at least 80% of cells</li>
+<li><li><strong>Mutually exclusive categories:</strong> Each observation fits in only one category</li>
+</ul>
+</div>
+<div class="when-box">
+<h4>When to Use Fisher's Exact Test Instead</h4>
+<p>Use Fisher's exact test when: (1) Any expected cell count is < 5, especially in 2×2 tables, (2) Sample size is small and chi-square approximation may be inaccurate. Fisher's test calculates the exact probability rather than using the chi-square approximation.</p>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Chi-Square Test</h4><p>Test independence of categorical variables</p><div class="code"><span class="ck">tabulate</span> foreign rep78, chi2 expected</div></div>
 <div class="command-card"><h4>Fisher's Exact Test</h4><p>Exact test for small samples</p><div class="code"><span class="ck">tabulate</span> foreign rep78, exact</div></div>
 <div class="command-card"><h4>Cramér's V</h4><p>Measure of association</p><div class="code"><span class="ck">tabulate</span> foreign rep78, v</div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">Correlation</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Correlation?</h4>
+<p>Correlation measures the strength and direction of the <em>linear</em> relationship between two continuous variables. Correlation coefficients range from -1 (perfect negative) to +1 (perfect positive), with 0 indicating no linear relationship. Remember: <strong>correlation ≠ causation</strong>.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Pearson Correlation</h4>
+<ul>
+<li><strong>Linearity:</strong> Relationship between variables should be linear (check with scatterplot)</li>
+<li><strong>Normality:</strong> Variables should follow approximate bivariate normal distribution</li>
+<li><strong>No outliers:</strong> Outliers can severely distort the correlation coefficient</li>
+<li><strong>Independence:</strong> Observations are independent</li>
+<li><strong>Homoscedasticity:</strong> Constant variance across the range of values</li>
+</ul>
+</div>
+<div class="when-box">
+<h4>When to Use Each Correlation Type</h4>
+<p><strong>Pearson:</strong> For approximately normally distributed continuous variables with linear relationship.<br><strong>Spearman:</strong> Monotonic (not necessarily linear) relationships, ordinal data, or when outliers present.<br><strong>Kendall's Tau:</strong> Small samples, many tied ranks, or when you need a more robust measure.</p>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Pearson Correlation</h4><p>Linear association</p><div class="code"><span class="ck">correlate</span> price mpg weight
 <span class="ck">pwcorr</span> price mpg, sig star(0.05)</div></div>
@@ -479,7 +631,25 @@ tr:hover{background:var(--bg)}
 <div class="command-card"><h4>Partial Correlation</h4><p>Controlling for covariates</p><div class="code"><span class="ck">pcorr</span> price mpg weight</div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">Non-Parametric Tests</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Non-Parametric Tests?</h4>
+<p>Non-parametric tests (also called distribution-free tests) don't assume the data follows a specific distribution (like normal). They're robust to outliers and work with ordinal data. However, they are generally less powerful than parametric tests when assumptions are met—use them when parametric assumptions are violated.</p>
+</div>
+<div class="assumptions-box">
+<h4>General Assumptions for Non-Parametric Tests</h4>
+<ul>
+<li><strong>Independence:</strong> Observations are independent (same as parametric tests)</li>
+<li><strong>Ordinal or continuous data:</strong> Can handle ranked/ordinal data</li>
+<li><strong>No distributional assumptions:</strong> Data need not be normal</li>
+<li><strong>Random sampling:</strong> Data collected through random sampling</li>
+</ul>
+</div>
+<div class="when-box">
+<h4>Non-Parametric Test Selection Guide</h4>
+<p><strong>Mann-Whitney U:</strong> Use instead of independent t test when data is non-normal or has outliers.<br><strong>Wilcoxon Signed-Rank:</strong> Use instead of paired t test when differences are non-normal.<br><strong>Kruskal-Wallis:</strong> Use instead of one-way ANOVA when data is non-normal or variances are unequal.<br><strong>Friedman:</strong> Use instead of repeated measures ANOVA for non-normal data.</p>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Mann-Whitney U</h4><p>Non-parametric independent t test</p><div class="code"><span class="ck">ranksum</span> mpg, by(foreign)</div></div>
 <div class="command-card"><h4>Wilcoxon Signed-Rank</h4><p>Non-parametric paired t test</p><div class="code"><span class="ck">signrank</span> var1 = var2
@@ -489,31 +659,54 @@ tr:hover{background:var(--bg)}
 <div class="command-card"><h4>Kolmogorov-Smirnov</h4><p>Compare two distributions</p><div class="code"><span class="ck">ksmirnov</span> mpg, by(foreign)</div></div>
 </div>
 </div>
-<div class="category"><h3 class="category-title">Assumption &amp; Diagnostic Tests</h3><div class="warning-box"><strong>⚠️ Run these AFTER fitting a model</strong> — Shapiro-Wilk and Levene's can also be standalone</div>
+
+<div class="category"><h3 class="category-title">Assumption &amp; Diagnostic Tests</h3><div class="warning-box"><strong>⚠️ Run these BEFORE or AFTER fitting a model</strong> — Shapiro-Wilk and Levene's can be standalone; others are post-estimation</div>
+<div class="theory-box">
+<h4>Theory: Why Check Assumptions?</h4>
+<p>Statistical tests are only valid when their assumptions are met. Violating assumptions can lead to: (1) Inflated Type I error (false positives), (2) Reduced power (missed true effects), (3) Biased estimates. Always verify assumptions and report them in your methods section.</p>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Shapiro-Wilk</h4><p>Test normality</p><div class="code"><span class="ck">swilk</span> mpg
 <span class="cc">* On residuals</span>
 <span class="ck">regress</span> price mpg
 <span class="ck">predict</span> resid, residuals
 <span class="ck">swilk</span> resid</div></div>
+<div class="info-box"><strong>💡 Interpretation:</strong> <strong>Shapiro-Wilk</strong> is the preferred normality test for small and moderate samples (generally recommended over Kolmogorov-Smirnov). <strong>p > 0.05</strong> = Data is approximately normally distributed. <strong>p < 0.05</strong> = Data significantly deviates from normality. Always confirm with histogram and Q-Q plot.</div>
 <div class="command-card"><h4>Breusch-Pagan</h4><p>Heteroskedasticity</p><div class="code"><span class="ck">regress</span> price mpg weight
 <span class="ck">estat hettest</span>
-<span class="cc">* p &lt; 0.05 = heteroskedasticity</span></div></div>
+<span class="cc">* p < 0.05 = heteroskedasticity</span></div></div>
 <div class="command-card"><h4>VIF — Multicollinearity</h4><p>Variance inflation factors</p><div class="code"><span class="ck">regress</span> price mpg weight foreign
 <span class="ck">estat vif</span>
-<span class="cc">* VIF &gt; 10 = high multicollinearity</span></div></div>
+<span class="cc">* VIF > 10 = high multicollinearity</span></div></div>
 <div class="command-card"><h4>Durbin-Watson</h4><p>Autocorrelation in residuals</p><div class="code"><span class="ck">tsset</span> time
 <span class="ck">regress</span> y x
 <span class="ck">estat dwatson</span>
 <span class="cc">* D ≈ 2 = no autocorrelation</span></div></div>
-<div class="command-card"><h4>Levene's Test</h4><p>Equality of variances</p><div class="code"><span class="ck">ssc install</span> robvar
-<span class="ck">robvar</span> mpg, by(foreign)</div></div>
+<div class="command-card"><h4>Levene's Test</h4><p>Equality of variances</p><div class="code"><span class="ck">robvar</span> mpg, by(foreign)</div></div>
 <div class="command-card"><h4>Ramsey RESET</h4><p>Functional form / omitted variables</p><div class="code"><span class="ck">regress</span> price mpg weight
 <span class="ck">estat ovtest</span>
-<span class="cc">* p &lt; 0.05 = misspecification</span></div></div>
+<span class="cc">* p < 0.05 = misspecification</span></div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">⏱️ Survival Analysis</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Survival Analysis?</h4>
+<p>Survival analysis (time-to-event analysis) handles data where the outcome is the time until an event occurs (death, failure, relapse). Unlike standard methods, it properly handles <strong>censored data</strong>—cases where the event hasn't occurred by the end of the study. Essential in clinical trials, reliability engineering, and epidemiology.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Survival Analysis</h4>
+<ul>
+<li><strong>Non-informative censoring:</strong> Censored subjects should have the same survival prospects as those still followed</li>
+<li><strong>Independence:</strong> Survival times are independent between subjects</li>
+<li><strong>Proportional hazards (for Cox model):</strong> Hazard ratio should be constant over time</li>
+<li><strong>Tied event times:</strong> Allowed and automatically handled in Cox regression (Efron method default in Stata)</li>
+</ul>
+</div>
+<div class="when-box">
+<h4>When to Use Each Survival Method</h4>
+<p><strong>Kaplan-Meier:</strong> Non-parametric survival curve estimation, comparing groups with log-rank test.<br><strong>Cox PH Model:</strong> Semi-parametric regression with covariates, most common approach.<br><strong>Parametric models:</strong> When you can assume a specific distribution (Weibull, exponential).</p>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Declare Survival Data</h4><p>Set up time-to-event structure</p><div class="code"><span class="ck">stset</span> time, failure(died)
 <span class="ck">stset</span> time, failure(died) id(id) enter(t0)</div></div>
@@ -527,7 +720,22 @@ tr:hover{background:var(--bg)}
 <span class="ck">stsum</span>, by(treatment)</div></div>
 </div>
 </div>
-<div class="category"><h3 class="category-title">🔬 Meta-Analysis</h3><div class="info-box"><strong>💡 Stata 16+:</strong> Native <code>meta</code> package built-in. Older: <code>ssc install metan</code></div>
+
+<div class="category"><h3 class="category-title">🔬 Meta-Analysis</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Meta-Analysis?</h4>
+<p>Meta-analysis statistically combines results from multiple studies to estimate an overall effect size. It increases statistical power, improves precision, and helps resolve uncertainty when studies disagree. Essential for evidence-based medicine and systematic reviews.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Meta-Analysis</h4>
+<ul>
+<li><strong>Study independence:</strong> Studies should be independent (no overlapping samples)</li>
+<li><strong>Comparable effect sizes:</strong> Studies should measure the same underlying effect</li>
+<li><strong>Publication bias awareness:</strong> Be aware that unpublished negative results may be missing</li>
+<li><strong>Heterogeneity consideration:</strong> Studies may differ in true effect size (random effects model)</li>
+</ul>
+</div>
+<div class="info-box"><strong>💡 Stata 16+:</strong> Native <code>meta</code> package built-in. Older: <code>ssc install metan</code></div>
 <div class="command-grid">
 <div class="command-card"><h4>Declare Meta Data</h4><p>Set up meta structure</p><div class="code"><span class="ck">meta set</span> logor selogor, studylabel(study)</div></div>
 <div class="command-card"><h4>Forest Plot</h4><p>Visualise effect sizes</p><div class="code"><span class="ck">meta forestplot</span>
@@ -552,7 +760,12 @@ tr:hover{background:var(--bg)}
 <div class="command-card"><h4>Cumulative Meta-Analysis</h4><p>Sequential addition of studies</p><div class="code"><span class="ck">meta summarize</span>, cumulative(year)</div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">🏥 Biostatistics</h3>
+<div class="theory-box">
+<h4>Theory: Biostatistical Methods</h4>
+<p>Biostatistics applies statistical methods to biological and medical research. Key concepts include: (1) <strong>Sensitivity</strong> — ability to correctly identify those with disease, (2) <strong>Specificity</strong> — ability to correctly identify those without disease, (3) <strong>Odds/Risk Ratios</strong> — measure association between exposure and outcome.</p>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Sensitivity &amp; Specificity</h4><p>Diagnostic test performance</p><div class="code"><span class="ck">ssc install</span> diagt
 <span class="ck">diagt</span> disease test</div></div>
@@ -581,8 +794,28 @@ tr:hover{background:var(--bg)}
 </div>
 </section>
 
-<section id="regression" class="section"><h2 class="section-title">📈 Regression &amp; Modeling</h2><p class="section-desc">Linear, binary, count, panel, survival, time series, and multivariate models</p>
+<section id="regression" class="section"><h2 class="section-title">📈 Regression &amp; Modeling</h2><p class="section-desc">Linear, binary, count, panel, survival, time series, and multivariate models with theory and assumptions</p>
+
 <div class="category"><h3 class="category-title">Linear Regression</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Linear Regression?</h4>
+<p>Linear regression models the relationship between a continuous outcome variable and one or more predictor variables. It estimates how much the outcome changes for a one-unit change in the predictor, holding other variables constant. The foundation of statistical modeling in social sciences, economics, and epidemiology.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Linear Regression (LINE)</h4>
+<ul>
+<li><strong>Linearity:</strong> Relationship between predictors and outcome is linear</li>
+<li><strong>Independence:</strong> Observations are independent (no autocorrelation in residuals)</li>
+<li><strong>Normality:</strong> Residuals are normally distributed (especially for inference)</li>
+<li><strong>Equal variance (Homoscedasticity):</strong> Residual variance is constant across all fitted values</li>
+<li><strong>No multicollinearity:</strong> Predictors are not highly correlated (VIF < 10)</li>
+<li><strong>No influential outliers:</strong> Check Cook's distance and leverage</li>
+</ul>
+</div>
+<div class="when-box">
+<h4>When to Use Linear Regression</h4>
+<p>Use when: (1) Outcome variable is continuous, (2) You want to predict values or understand relationships, (3) You have adequate sample size (at least 10-20 observations per predictor), (4) Assumptions can be reasonably met.</p>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Simple Linear Regression</h4><p>One predictor, continuous outcome</p><div class="code"><span class="ck">regress</span> price mpg</div></div>
 <div class="command-card"><h4>Multiple Linear Regression</h4><p>Multiple predictors</p><div class="code"><span class="ck">regress</span> price mpg weight foreign
@@ -602,7 +835,23 @@ tr:hover{background:var(--bg)}
 <span class="ck">lincom</span> mpg + weight</div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">Binary &amp; Categorical Outcome Models</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Logistic/Probit Regression?</h4>
+<p>When the outcome is binary (yes/no, success/failure), linear regression is inappropriate because: (1) Predictions can fall outside [0,1], (2) Errors are not normal, (3) Variance is not constant. Logistic regression uses the logit link to model the probability of the outcome, ensuring predictions stay between 0 and 1.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Logistic Regression</h4>
+<ul>
+<li><strong>Binary outcome:</strong> Dependent variable has only two categories</li>
+<li><strong>Independence:</strong> Observations are independent</li>
+<li><strong>No multicollinearity:</strong> Predictors should not be highly correlated</li>
+<li><strong>Linearity of logit:</strong> Continuous predictors should be linearly related to the logit of the outcome</li>
+<li><strong>Adequate sample size:</strong> At least 10 events per predictor variable (EPV rule)</li>
+<li><strong>No outliers/influential cases:</strong> Check with influence statistics</li>
+</ul>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Logistic Regression</h4><p>Binary outcome — log-odds / OR</p><div class="code"><span class="ck">logit</span> foreign mpg price
 <span class="ck">logistic</span> foreign mpg price
@@ -612,6 +861,7 @@ tr:hover{background:var(--bg)}
 
 <span class="cc">* Classification table:</span>
 <span class="ck">estat classification</span></div></div>
+<div class="info-box"><strong>💡 Important:</strong> Check assumption of linearity in logit for continuous predictors and absence of multicollinearity (VIF < 10) before interpreting logistic regression results.</div>
 <div class="command-card"><h4>Probit Regression</h4><p>Binary outcome — normal CDF</p><div class="code"><span class="ck">probit</span> foreign mpg price
 <span class="ck">margins</span>, dydx(*) atmeans</div></div>
 <div class="command-card"><h4>Multinomial Logistic</h4><p>3+ unordered categories</p><div class="code"><span class="ck">mlogit</span> rep78 price mpg
@@ -624,7 +874,22 @@ tr:hover{background:var(--bg)}
 <span class="ck">brant</span></div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">Count &amp; Rate Models</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Count Models?</h4>
+<p>Count data (0, 1, 2, 3...) has special properties: it's non-negative, discrete, and often right-skewed with many zeros. Standard linear regression is inappropriate. Poisson regression models count outcomes assuming the mean equals variance. When variance exceeds mean (overdispersion), use Negative Binomial.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Count Models</h4>
+<ul>
+<li><strong>Count outcome:</strong> Non-negative integers (0, 1, 2, ...)</li>
+<li><strong>Independence:</strong> Observations are independent</li>
+<li><strong>Poisson:</strong> Mean = Variance (equidispersion) — check with dispersion test</li>
+<li><strong>Negative Binomial:</strong> Relaxes the equidispersion assumption</li>
+<li><strong>Zero-inflated models:</strong> Use when there are more zeros than expected</li>
+</ul>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Poisson Regression</h4><p>Count outcome data</p><div class="code"><span class="ck">poisson</span> count_var x1 x2, irr</div></div>
 <div class="command-card"><h4>Negative Binomial</h4><p>Overdispersed count data</p><div class="code"><span class="ck">nbreg</span> count_var x1 x2, irr</div></div>
@@ -632,7 +897,22 @@ tr:hover{background:var(--bg)}
 <div class="command-card"><h4>Zero-Inflated Neg. Binomial</h4><p>Overdispersion + excess zeros</p><div class="code"><span class="ck">zinb</span> count_var x1, inflate(x2)</div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">Panel &amp; Multilevel Models</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Panel Data Models?</h4>
+<p>Panel (longitudinal) data follows the same subjects over multiple time periods. This allows controlling for unobserved heterogeneity that doesn't change over time. Fixed effects models control for all time-invariant confounders, while random effects models allow estimating effects of time-invariant variables.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Panel Data Models</h4>
+<ul>
+<li><strong>Fixed Effects:</strong> Unobserved heterogeneity is correlated with predictors (within-estimator)</li>
+<li><strong>Random Effects:</strong> Unobserved heterogeneity is uncorrelated with predictors</li>
+<li><strong>Hausman test:</strong> Use to decide between FE and RE</li>
+<li><strong>No autocorrelation:</strong> Residuals should not be correlated over time</li>
+<li><strong>Stationarity (for long panels):</strong> Statistical properties should be stable over time</li>
+</ul>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Declare Panel Data</h4><p>Set panel structure</p><div class="code"><span class="ck">xtset</span> id year</div></div>
 <div class="command-card"><h4>Fixed Effects</h4><p>Within-unit variation</p><div class="code"><span class="ck">xtreg</span> y x1 x2, fe</div></div>
@@ -651,16 +931,46 @@ tr:hover{background:var(--bg)}
 <span class="ck">marginsplot</span></div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">Cox &amp; Parametric Survival Models</h3>
+<div class="theory-box">
+<h4>Theory: Cox Proportional Hazards Model</h4>
+<p>The Cox PH model is the most widely used survival regression model. It's semi-parametric: it makes no assumption about the baseline hazard function but assumes covariates multiply the hazard by a constant factor (proportional hazards). This flexibility makes it robust for many applications.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for Cox PH Model</h4>
+<ul>
+<li><strong>Proportional hazards:</strong> Hazard ratio is constant over time (test with estat phtest)</li>
+<li><strong>Non-informative censoring:</strong> Censored subjects have same survival prospects</li>
+<li><strong>Linearity:</strong> Continuous covariates should be linearly related to log-hazard</li>
+<li><strong>Additivity:</strong> Effects of covariates are additive on the log-hazard scale</li>
+<li><strong>No interaction with time:</strong> Covariate effects don't change over time</li>
+</ul>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Cox PH Model</h4><p>Semi-parametric hazard regression</p><div class="code"><span class="ck">stset</span> time, failure(died)
 <span class="ck">stcox</span> age i.treatment, hr nolog
 <span class="ck">estat phtest</span>, detail</div></div>
+<div class="info-box"><strong>💡 Interpretation:</strong> Exp(B) represents Hazard Ratio (HR). HR > 1 increases risk of event, HR < 1 decreases risk of event, HR = 1 indicates no effect.</div>
 <div class="command-card"><h4>Parametric Survival</h4><p>Weibull / exponential / log-normal</p><div class="code"><span class="ck">streg</span> age treatment, dist(weibull) hr
 <span class="ck">streg</span> age treatment, dist(lognormal)</div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">Time Series Models</h3>
+<div class="theory-box">
+<h4>Theory: Why Use Time Series Models?</h4>
+<p>Time series data has temporal dependence—observations close in time are correlated. This violates the independence assumption of standard regression. Time series models (ARIMA) account for autocorrelation, trends, and seasonality to make valid forecasts and inferences.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for ARIMA Models</h4>
+<ul>
+<li><strong>Stationarity:</strong> Mean, variance, and autocorrelation are constant over time</li>
+<li><strong>No autocorrelation in residuals:</strong> After fitting, residuals should be white noise</li>
+<li><strong>Appropriate model order:</strong> Correct AR and MA terms specified (check ACF/PACF)</li>
+<li><strong>No structural breaks:</strong> Data generating process is stable</li>
+</ul>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>Declare Time Series</h4><p>Set time variable</p><div class="code"><span class="ck">tsset</span> date, yearly
 <span class="ck">tsset</span> date, daily</div></div>
@@ -673,7 +983,22 @@ tr:hover{background:var(--bg)}
 <span class="ck">tsline</span> y</div></div>
 </div>
 </div>
+
 <div class="category"><h3 class="category-title">Multivariate &amp; Dimensionality Reduction</h3>
+<div class="theory-box">
+<h4>Theory: Why Use PCA and Factor Analysis?</h4>
+<p>When you have many correlated variables, PCA and factor analysis reduce dimensionality by identifying underlying components or factors. PCA creates uncorrelated components that capture maximum variance. Factor analysis models observed variables as linear combinations of latent (unobserved) factors.</p>
+</div>
+<div class="assumptions-box">
+<h4>Assumptions for PCA and Factor Analysis</h4>
+<ul>
+<li><strong>Sample size:</strong> At least 100-300 observations, or 5-10 observations per variable</li>
+<li><strong>Correlation:</strong> Variables should be correlated (Bartlett's test of sphericity)</li>
+<li><strong>Factorability:</strong> KMO measure should be > 0.5 (preferably > 0.7)</li>
+<li><strong>Linearity:</strong> Relationships between variables should be linear</li>
+<li><strong>No outliers:</strong> Extreme values can distort results</li>
+</ul>
+</div>
 <div class="command-grid">
 <div class="command-card"><h4>PCA</h4><p>Principal component analysis</p><div class="code"><span class="ck">pca</span> price mpg weight length
 <span class="ck">screeplot</span>
@@ -755,7 +1080,7 @@ tr:hover{background:var(--bg)}
 <section id="reference" class="section"><h2 class="section-title">📖 Quick Reference</h2><p class="section-desc">Operators, functions, special variables, missing values, and useful packages</p>
 <div class="category"><h3 class="category-title">Operators</h3>
 <div class="table-container"><table>
-<tr><th>Type</th><th>Op</th><th>Description</th><th>Example</th></tr>
+<tr><th>Type</th><th>Operator</th><th>Description</th><th>Example</th></tr>
 <tr><td rowspan="5"><strong>Arithmetic</strong></td><td><code>+</code></td><td>Addition</td><td><code>gen total = x + y</code></td></tr>
 <tr><td><code>-</code></td><td>Subtraction</td><td><code>gen diff = x - y</code></td></tr>
 <tr><td><code>*</code></td><td>Multiplication</td><td><code>gen prod = x * y</code></td></tr>
@@ -778,8 +1103,8 @@ tr:hover{background:var(--bg)}
 <tr><td><code>round()</code></td><td>Round to integer</td><td><code>gen r = round(price)</code></td></tr>
 <tr><td><code>int()</code></td><td>Integer part</td><td><code>gen i = int(price)</code></td></tr>
 <tr><td><code>mod()</code></td><td>Modulus / remainder</td><td><code>gen rem = mod(x,5)</code></td></tr>
-<tr><td><code>max()</code></td><td>Maximum of args</td><td><code>gen m = max(x,y,z)</code></td></tr>
-<tr><td><code>min()</code></td><td>Minimum of args</td><td><code>gen m = min(x,y,z)</code></td></tr>
+<tr><td><code>max()</code></td><td>Maximum of arguments</td><td><code>gen m = max(x,y,z)</code></td></tr>
+<tr><td><code>min()</code></td><td>Minimum of arguments</td><td><code>gen m = min(x,y,z)</code></td></tr>
 </table></div></div>
 <div class="category"><h3 class="category-title">Special Variables</h3>
 <div class="command-grid">
@@ -811,24 +1136,182 @@ tr:hover{background:var(--bg)}
 </div>
 </div>
 </section>
+
+<section id="examples" class="section"><h2 class="section-title">📚 Complete Workflow Examples</h2><p class="section-desc">Real-world analysis workflows from data loading to results export</p>
+
+<div class="success-box"><strong>💡 Professional Tip:</strong> These complete examples show full workflows, not just isolated commands. This is essential for real research projects.</div>
+
+<div class="category"><h3 class="category-title">Linear Regression Workflow</h3>
+<div class="command-grid">
+<div class="command-card" style="grid-column: span 2;"><h4>Complete Linear Regression Example</h4><p>Full workflow from data exploration to diagnostics</p><div class="code"><span class="cc">* Load example dataset</span>
+<span class="ck">sysuse</span> auto, clear
+
+<span class="cc">* Explore data</span>
+<span class="ck">describe</span>
+<span class="ck">summarize</span> price mpg weight
+
+<span class="cc">* Check assumptions before modeling</span>
+<span class="ck">histogram</span> price, normal
+<span class="ck">swilk</span> price
+
+<span class="cc">* Visualize relationship</span>
+<span class="ck">scatter</span> price mpg
+
+<span class="cc">* Fit regression model</span>
+<span class="ck">regress</span> price mpg weight
+
+<span class="cc">* Check multicollinearity</span>
+<span class="ck">estat vif</span>
+
+<span class="cc">* Check heteroskedasticity</span>
+<span class="ck">estat hettest</span>
+
+<span class="cc">* Check normality of residuals</span>
+<span class="ck">predict</span> resid, residuals
+<span class="ck">swilk</span> resid
+<span class="ck">qnorm</span> resid
+
+<span class="cc">* Predict fitted values</span>
+<span class="ck">predict</span> price_hat
+
+<span class="cc">* Plot fitted vs actual</span>
+<span class="ck">scatter</span> price price_hat
+
+<span class="cc">* Save dataset</span>
+<span class="ck">save</span> auto_analysis.dta, replace</div></div>
 </div>
+</div>
+
+<div class="category"><h3 class="category-title">Logistic Regression Workflow</h3>
+<div class="command-grid">
+<div class="command-card" style="grid-column: span 2;"><h4>Complete Logistic Regression Example</h4><p>Binary outcome analysis with diagnostics</p><div class="code"><span class="ck">sysuse</span> auto, clear
+
+<span class="cc">* Check outcome distribution</span>
+<span class="ck">tabulate</span> foreign
+
+<span class="cc">* Fit logistic model</span>
+<span class="ck">logistic</span> foreign mpg weight
+
+<span class="cc">* Check model fit</span>
+<span class="ck">estat classification</span>
+<span class="ck">lroc</span>
+
+<span class="cc">* Predict probability</span>
+<span class="ck">predict</span> prob, pr
+
+<span class="cc">* Check influential observations</span>
+<span class="ck">predict</span> influence, cooksd
+<span class="ck">scatter</span> influence _n</span></div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Survival Analysis Workflow</h3>
+<div class="command-grid">
+<div class="command-card" style="grid-column: span 2;"><h4>Complete Cox Survival Example</h4><p>Time-to-event analysis with diagnostics</p><div class="code"><span class="ck">sysuse</span> cancer, clear
+
+<span class="cc">* Declare survival data</span>
+<span class="ck">stset</span> studytime, failure(died)
+
+<span class="cc">* Kaplan-Meier curve</span>
+<span class="ck">sts graph</span>, by(drug) risktable
+
+<span class="cc">* Log-rank test</span>
+<span class="ck">sts test</span> drug
+
+<span class="cc">* Cox regression</span>
+<span class="ck">stcox</span> drug age, hr
+
+<span class="cc">* Test proportional hazards assumption</span>
+<span class="ck">estat phtest</span>, detail</div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Professional Do-File Template</h3>
+<div class="command-grid">
+<div class="command-card" style="grid-column: span 2;"><h4>Production-Ready Do-File Structure</h4><p>Industry-standard template for reproducible research</p><div class="code"><span class="cc">*************************************************</span>
+<span class="cc">* Project: Analysis Name</span>
+<span class="cc">* Author: Monu Prajapati</span>
+<span class="cc">* Date: 2026</span>
+<span class="cc">*************************************************</span>
+
+<span class="ck">version</span> 18
+<span class="ck">clear all</span>
+<span class="ck">set more off</span>
+
+<span class="cc">* Start log</span>
+<span class="ck">log using</span> <span class="cs">"analysis.log"</span>, replace
+
+<span class="cc">* Load data</span>
+<span class="ck">use</span> <span class="cs">"data.dta"</span>, clear
+
+<span class="cc">* Analysis code here</span>
+
+<span class="cc">* Save results</span>
+<span class="ck">save</span> <span class="cs">"data_final.dta"</span>, replace
+
+<span class="cc">* Close log</span>
+<span class="ck">log close</span>
+<span class="cc">*************************************************</span></div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Regression Diagnostics</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Residual Analysis</h4><p>Check regression assumptions</p><div class="code"><span class="cc">* Residual plot</span>
+<span class="ck">rvfplot</span>
+
+<span class="cc">* Normality test</span>
+<span class="ck">predict</span> resid, residuals
+<span class="ck">swilk</span> resid</div></div>
+<div class="command-card"><h4>Model Specification</h4><p>Test for omitted variables</p><div class="code"><span class="cc">* Specification test</span>
+<span class="ck">estat ovtest</span>
+
+<span class="cc">* Influence statistics</span>
+<span class="ck">predict</span> cooksd, cooksd</div></div>
+</div>
+</div>
+
+<div class="category"><h3 class="category-title">Missing Data & Export</h3>
+<div class="command-grid">
+<div class="command-card"><h4>Missing Data Handling</h4><p>Identify and handle missing values</p><div class="code"><span class="cc">* Summary of missing data</span>
+<span class="ck">misstable summarize</span>
+
+<span class="cc">* Drop missing observations</span>
+<span class="ck">drop if</span> missing(price)
+
+<span class="cc">* Impute with mean</span>
+<span class="ck">summarize</span> price
+<span class="ck">replace</span> price = r(mean) <span class="ck">if</span> missing(price)</div></div>
+<div class="command-card"><h4>Export Results</h4><p>Save tables and data</p><div class="code"><span class="cc">* Export regression table</span>
+<span class="ck">ssc install</span> outreg2
+<span class="ck">outreg2 using</span> results.doc, replace
+
+<span class="cc">* Export dataset</span>
+<span class="ck">export excel using</span> data.xlsx, replace
+
+<span class="cc">* Export graph</span>
+<span class="ck">graph export</span> plot.png, replace</div></div>
+</div>
+</div>
+
+</section>
+</div><!-- /ctr -->
 
 <div class="footer">
   <div class="fc">
     <h3>📞 Contact</h3>
-    <p style="font-size:1.15rem;margin:.75rem 0"><strong>Monu Prajapati</strong></p>
-    <p style="opacity:.9;margin-bottom:1.5rem">Statistician | Biostatistician</p>
+    <p style="font-size:1.25rem;margin:1rem 0"><strong>Monu Prajapati</strong></p>
+    <p style="opacity:.9;margin-bottom:2rem">Statistician | Biostatistician</p>
     <div class="cg">
       <div class="cc2"><div class="ico">📱</div><div class="lbl">Mobile</div><div class="val">+91 7433863551</div></div>
       <div class="cc2"><div class="ico">✉️</div><div class="lbl">Email</div><div class="val"><a href="mailto:prajpapatimonu@gmail.com">prajpapatimonu@gmail.com</a></div></div>
     </div>
-    <p style="margin-top:1.5rem;opacity:.7;font-size:.875rem">© 2026 Monu Prajapati | Statistical content curated and maintained by Monu Prajapati | Built with AI assistance
-</p>
-    <p style="opacity:.5;font-size:.8rem;margin-top:.4rem">Stata is a registered trademark of StataCorp LLC. This guide is for educational purposes only. | <a href="https://www.stata.com" target="_blank" style="color:#00c896">stata.com</a></p>
+    <p style="margin-top:2rem;opacity:.7">© 2026 Monu Prajapati. All rights reserved.</p>
+    <p style="opacity:.5;font-size:.875rem;margin-top:.5rem">Stata is a registered trademark of StataCorp LLC. This guide is for educational purposes only. | <a href="https://www.stata.com" target="_blank" style="color:#00c896">stata.com</a></p>
   </div>
 </div>
 
-<button class="stb" id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">↑</button>
+<button class="stb" id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
 // Nav
@@ -867,7 +1350,7 @@ document.querySelectorAll('.command-card').forEach(function(card){
   var sn=sec&&sec.querySelector('.section-title')?sec.querySelector('.section-title').innerText:sid;
   if(h)idx.push({h:h,d:d,co:co,sid:sid,sn:sn,card:card});
 });
-function openS(){sOverlay.classList.add('open');sInput.value='';sResults.innerHTML='<div class="se">Start typing to search…</div>';setTimeout(function(){sInput.focus();},80);}
+function openS(){sOverlay.classList.add('open');sInput.value='';sResults.innerHTML='<div class="se">Start typing to search…</div>';setTimeout(function(){sInput.focus();},50);}
 function closeS(){sOverlay.classList.remove('open');}
 sBtn.addEventListener('click',openS);
 sClose.addEventListener('click',closeS);
@@ -896,6 +1379,14 @@ sInput.addEventListener('input',function(){
         hits[i].card.scrollIntoView({behavior:'smooth',block:'center'});
         hits[i].card.style.borderColor='var(--a)';
         setTimeout(function(){hits[i].card.style.borderColor='';},2000);
+      },300);
+    });
+  });
+});
+</script>
+</body>
+</html>
+       setTimeout(function(){hits[i].card.style.borderColor='';},2000);
       },300);
     });
   });
